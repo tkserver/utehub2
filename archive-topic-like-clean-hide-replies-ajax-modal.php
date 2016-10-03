@@ -1,6 +1,6 @@
 <?php
 /**
- * Template Name: Archive-Topic-Single
+ * Template Name: Threaded-View-Like-Clean-Hide-Replies-Ajax-Modal
  * Description: Used as a page template to show page contents, followed by a loop through a topics archive
  */
  // Gets header.php
@@ -60,13 +60,15 @@ include_once(ABSPATH.'wp-admin/includes/plugin.php');
 
 	?>
 <script>
+
 	task = "";
-     function myFunction() {
-    alert("Feature not implemented yet! GO UTES!");
-}
-     function lognToReply() {
-    alert("Please login (or register) to post a message. GO UTES!");
-}
+
+	function myFunction() {
+    	alert("Feature not implemented yet! GO UTES!");
+	}
+    function lognToReply() {
+    	alert("Please login (or register) to post a message. GO UTES!");
+	}
 
 	function newPost() {
 		//document.getElementById("taskVar").innerHTML = "newPost";
@@ -108,6 +110,75 @@ include_once(ABSPATH.'wp-admin/includes/plugin.php');
 				if(this.html()==a){this.html(b)}
 				else{this.html(a)}
 		}
+	});
+
+	jQuery(document).ready(function() {
+		jQuery('.more_button').click(function(){
+			if(jQuery(this).prevAll(".threadContent, .replyContent").hasClass("contentLess")) {
+				jQuery(this).prevAll(".threadContent, .replyContent").removeClass("contentLess");
+				jQuery(this).prevAll(".threadContent, .replyContent").addClass("contentMore");
+				jQuery(this).addClass("active");
+				jQuery(this).text("Less");
+			} else {
+				jQuery(this).prevAll(".threadContent, .replyContent").removeClass("contentMore");
+				jQuery(this).prevAll(".threadContent, .replyContent").addClass("contentLess");
+				jQuery(this).removeClass("active");
+				jQuery(this).text("More");
+			}
+			return false;
+		});
+
+		jQuery('.expand-all').click(function(){
+			if(jQuery(".threadContent, .replyContent").hasClass("contentLess")) {
+				jQuery(".threadContent, .replyContent").removeClass("contentLess");
+				jQuery(".threadContent, .replyContent").addClass("contentMore");
+				jQuery(".more_button").addClass("active");
+				jQuery(".more_button").text("Less");
+				jQuery(this).addClass("active");
+				jQuery(this).text("Shrink All");
+			} else {
+				jQuery(".threadContent, .replyContent").removeClass("contentMore");
+				jQuery(".threadContent, .replyContent").addClass("contentLess");
+				jQuery(".more_button").removeClass("active");
+				jQuery(".more_button").text("More");
+				jQuery(this).removeClass("active");
+				jQuery(this).text("Expand All");
+			}
+			return false;
+		});
+
+		jQuery('#expand-replies').click(function(){
+			if(jQuery(".replies").hasClass("show_reply")) {
+					jQuery(".replies").removeClass("show_reply");
+					jQuery(".replies").addClass("hide_reply");
+					jQuery(".show-replies-button").text("Show Replies");
+					jQuery(this).text("Show Replies");
+			} else {
+					jQuery(".replies").removeClass("hide_reply");
+					jQuery(".replies").addClass("show_reply");
+					jQuery(".show-replies-button").text("Hide Replies");
+					jQuery(this).text("Hide Replies");
+			}
+			return false;
+		});
+
+		jQuery('.show-replies-button').click(function(){
+			if(jQuery(this).parent().next(".replies").hasClass("show_reply")) {
+					jQuery(this).parent().next(".replies").removeClass("show_reply");
+					jQuery(this).parent().next(".replies").addClass("hide_reply");
+					jQuery(this).text("Show Replies");
+			} else {
+					jQuery(this).parent().next(".replies").removeClass("hide_reply");
+					jQuery(this).parent().next(".replies").addClass("show_reply");
+					jQuery(this).text("Hide Replies");
+			}
+			return false;
+		});
+
+
+
+
+
 	});
 
 </script>
@@ -213,7 +284,6 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 		'post_status'    => 'publish',
 		'post_type'      => 'topic',
 		'post_author'    => $post_author,
-		//'post_password'  => '',
 		'post_content'   => $post_content,
 		'post_title'     => $post_title,
 		'comment_status' => 'closed',
@@ -253,9 +323,9 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 
 	$user_info = get_userdata($post_author);
 	$user_nice_name = $user_info->user_nicename;
-  $author_url = bp_core_get_user_domain( $post_author );
-  $bp_bbp_permalink = esc_url(get_permalink($topic_id));
-  $forum_url = get_permalink($forum_id);
+  	$author_url = bp_core_get_user_domain( $post_author );
+  	$bp_bbp_permalink = esc_url(get_permalink($topic_id));
+  	$forum_url = get_permalink($forum_id);
 	$bp_bbp_action = '<a href="' . $author_url. '">' . $user_nice_name . '</a> started the topic <a href="' . $bp_bbp_permalink . '">' . $post_title . '</a> in the <a href="'. $forum_url . '">' . get_the_title($forum_id) . '</a> forum.';;
 
 
@@ -265,8 +335,8 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 	$wpdb->insert(
 		$table_name,
 			array(
-				'user_id' 			      => $post_author,
-				'type' 			          => 'bbp_topic_create',
+				'user_id' 			  => $post_author,
+				'type' 			      => 'bbp_topic_create',
 				'action'              => $bp_bbp_action,
 				'item_id'             => $topic_id,
 				'secondary_item_id'   => $forum_id,
@@ -367,10 +437,9 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 		unset($_POST);
 
 	}
-	}
+}
 
 //--------------------- END OF postReply ------------------------  //
-
 
 	if ($task == 'replyReply') {
 
@@ -399,40 +468,56 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 	?>
 
 <div class="container">
+
+<!-- Default bootstrap modal example -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Poo title</h4>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
   <div class="row mobileContent browserContent">
     <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 well well-sm" id="registerContent">
       <?php if ( is_active_sidebar( 'sidebar-8' ) ) : ?>
       <?php dynamic_sidebar( 'sidebar-8' ); ?>
       <?php endif; ?>
       <div class="col-xs-12 clearfix fahk">
-        <div class="col-xs-6 text-left"> <?php echo '<h1 class="entry-title">'. get_the_title() .'</h1>'; ?> </div>
+        <div class="col-xs-6 text-left"> <?php echo '<h1 class="threaded-title">'. get_the_title() .'</h1>'; ?> </div>
         <div class="col-xs-6 text-right">
+			<button title="Expand or shrink all board replies on this page! Individual topics can be overridden." id="expand-replies" class="btn btn-default">Hide Replies</button>
+			<button title="Expand or shrink all board messages on this page! It is like clicking the more button a billeon times!" class="btn btn-default expand-all">Expand All</button>
           <?php if ( is_user_logged_in()) { ?>
-          <button id="threaded-new-message" data-toggle="modal" href="#my-modal" type="button" title="" class="btn btn-success pull-right" onclick="newPost()" >New Message</button>
+          <button id="threaded-new-message" data-toggle="modal" href="#my-modal" type="button" title="Post a New Message" class="btn btn-success pull-right" onclick="newPost()" >New Message</button>
           <?php } else { ?>
-          <button id="threaded-new-message" onclick="lognToReply()" type="button" title="" class="btn btn-success pull-right">New Message</button>
+          <button id="threaded-new-message" onclick="lognToReply()" type="button" title="Login to post a message..." class="btn btn-success pull-right">New Message</button>
           <?php	 } ?>
         </div>
       </div>
-      <?php
 
-//include (TEMPLATEPATH . '/extra-functions.php');
-
+<?php
  	// Intro Text (from page content)
 	echo '<div class="page hentry entry">';
+	// echo '<div class="threaded-head"></div>';
 	echo '<div class="entry-content">' . get_the_content() ;
 
 	//Protect against arbitrary paged values
 	$paged = ( get_query_var( 'page' ) ) ? absint( get_query_var( 'page' ) ) : 1;
 
-   //$th = 66;
-
-   //echo 'thread url: ' . $thread_url;
-
   if ($th > 0){
     $args = array(
-    'p' => $th,
-    'post_type' => 'topic'
+	    'p' => $th,
+	    'post_type' => 'topic'
     );
   } else {
 		$args = array(
@@ -452,98 +537,80 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 			$topicLink = get_page_link();
 			$parent = get_the_ID();
 			$parent_title = get_the_title($parent);
-			//$grandparent = $parent->post_parent;
 			$grandparent_title = get_the_title();
 			$author = get_the_author_meta();
 			$postLink = get_permalink();
 			$categoryLink = get_permalink($parentID);
-			//echo 'author id is ' . $author;
 			$postID = get_the_ID();
 			$menu_order = $post->menu_order;
 			$forum_id = get_post_meta( get_the_ID(), '_bbp_forum_id', true);
 			$topic_id = get_post_meta( get_the_ID(), '_bbp_topic_id', true);
-			//echo ' forum id is  ' . $forum_id . '<br />';
-			//echo ' topic id is  ' . $topic_id . '<br />';
-			//echo ' Menu order is  ' . $menu_order . '<br />';
-      //$author_url = bp_core_get_user_domain( $author );
-      //echo 'Author url is ' . $author_url;
-      $thread_url =  get_site_url() . '?th='.$parentID;
-
-
+	        $thread_url =  get_site_url() . '?th='.$parentID;
 			$forum_title = get_the_title($forum_id);
 			$forum_link = get_permalink($forum_id);
+			$post_status = get_post_status();
+
+
+			$reply_count = $wpdb->get_var("SELECT COUNT(ID) FROM ".$wpdb->prefix."posts WHERE post_type = 'reply' AND post_parent = '$topic_id' AND post_status = 'publish'");
+			//echo 'reply count ' . $reply_count;
 
 			echo '<div class="well well-sm threadWell">';
+				echo '<div class="topicContainer">';
+					echo '<div class="full-width">';
+						echo '<div class="threadAvatar">' . get_avatar( get_the_author_meta( 'ID' ), 16 ) . '</div>';
+						echo '<div class="threadAuthor">' . '<a href="' . bp_core_get_user_domain($author) . '">' . get_the_author() . '</a></div>';
+						echo '<div class="threadTopic">' . get_the_title() . '</div>';
+					echo '</div>';
+					echo '<div class="threadContent contentLess" id="threadContent_' . $postID . '">' . get_the_content() . '</div>';
+					?>
+						<!-- <div class="threadFooter">
+			  			<div class="btn-group btn-group-xs threadButtonGroup" role="group" aria-label="..."> -->
+						<button type="button" title="Click to see more/less content" class="more_button btn btn-default btn-xs" id="expandContent_<?php echo $postID; ?>">More</button>
+						<?php if($reply_count > 0) { ?>
+							<button type="button" title="Click to show/hide replies for this topic" alt="This topic is closed to replies" class="show-replies-button btn btn-default btn-xs">Hide Replies</button>
+						<?php } ?>
+						<button onclick="window.location='<?php echo $postLink; ?>'" type="button" title="Go to Topic in Forum Area" class="btn btn-default btn-xs">Open</button>
 
-			//if (function_exists('bp_core_get_user_domain')) {
-			//    echo "bp_core_get_user_domain does exist.<br />\n";
-			//} else {
-			//    echo "bp_core_get_user_domain does not exist.<br />\n";
-			//}
+						<?php if ($post_status == 'closed'){ ?>
+								<button type="button" class="btn btn-default btn-xs disabled" title="Topic Closed">Topic Closed</button>
+							<?php } else {
+								if ( is_user_logged_in()) { ?>
+									<button data-toggle="modal" href="#my-modal" type="button" title="" onclick="topic_id = <?php echo $parentID; ?>; forum_id = <?php echo $forum_id; ?>; replyPost(topic_id, forum_id)" class="btn btn-default btn-xs">Reply</button>
+							<?php } else { ?>
+								<button onclick="lognToReply()" type="button" title="" class="btn btn-default btn-xs">Reply</button>
+							<?php }
+						} ?>
 
-			echo '<div class="topicContainer">';
-			echo '<div class="threadAvatar">' . get_avatar( get_the_author_meta( 'ID' ), 16 ) . '</div>';
-			echo	'<div class="threadAuthor">' . '<a href="' . bp_core_get_user_domain($author) . '">' . get_the_author() . '</a></div>';
-			echo	'<div class="threadTopic">' . get_the_title() . '</div>';
-			echo 	'<div class="threadContent" id="threadContent_' . $postID . '">' . get_the_content() . '</div>';
-			?>
-      <div class="threadFooter">
-        <div class="btn-group btn-group-xs threadButtonGroup" role="group" aria-label="...">
-          <button type="button" title="Click to see more/less content" class="btn btn-default" id="expandContent_<?php echo $postID; ?>">More</button>
-          <script>
+						<button type="button" class="btn btn-default btn-xs"> <?php echo tk_like_buttons(); ?> </button>
+						<button type="button" title="Share this topic on Twitter" class="btn btn-default btn-xs">
+						  <a href="http://twitter.com/share?text=<?php echo get_the_title(); ?>&via=Ute_Hub&hashtags=GoUtes&url=<?php echo $thread_url; ?>" target="_blank"><i class="twitter"></i></a></button>
+						<button type="button" title="Share this topic on Facebook" class="btn btn-default btn-xs"><a href="https://facebook.com/sharer.php?u=<?php echo $thread_url; ?>" target="_blank"><i class="facebook"></i></a></button>
+						<button type="button" title="Date" class="btn btn-default btn-xs" disabled="disabled"> <?php echo get_the_date('m/d/y') . ' ' . get_the_time(); ?> </button>
+						<button type="button" title="Forum" class="btn btn-default btn-xs">
+						<a href="<?php echo $forum_link; ?>"><?php echo $forum_title; ?></a>
+						</button>
+			  			<!-- </div>
+						</div> -->
 
-			jQuery( "#expandContent_<?php echo $postID; ?>" ).click(function() {
-				jQuery( "#expandContent_<?php echo $postID; ?>"  ).toggleText( "Less", "More" );
-			  	jQuery( "#threadContent_<?php echo $postID; ?>"  ).toggleClass( "heightAuto" );
-			});
+						<?php
 
-			</script>
-          <button onclick="window.location='<?php echo $postLink; ?>'" type="button" title="Go to Topic in Forum Area" class="btn btn-default">Open</button>
-          <?php
-			if ( is_user_logged_in()) {
-		?>
-          <button data-toggle="modal" href="#my-modal" type="button" title="" onclick="topic_id = <?php echo $parentID; ?>; forum_id = <?php echo $forum_id; ?>; replyPost(topic_id, forum_id)" class="btn btn-default">Reply</button>
-          <?php
+				echo '</div>';
 
-			} else {
-		?>
-          <button onclick="lognToReply()" type="button" title="" class="btn btn-default">Reply</button>
-          <?php
-			}
-		?>
-          <button type="button" class="btn btn-default"> <?php echo tk_like_buttons(); ?> </button>
-
-          <button type="button" title="Share this topic on Twitter" class="btn btn-default">
-            <a href="http://twitter.com/share?text=<?php echo get_the_title(); ?>&via=Ute_Hub&hashtags=GoUtes&url=<?php echo $thread_url; ?>" target="_blank">
-              <i class="twitter"></i>
-            </a>
-          </button>
-          <button type="button" title="Share this topic on Facebook" class="btn btn-default">
-            <a href="https://facebook.com/sharer.php?u=<?php echo $thread_url; ?>" target="_blank">
-              <i class="facebook"></i>
-            </a>
-          </button>
-          <button type="button" title="Date" class="btn btn-default" disabled="disabled"> <?php echo get_the_date('m/d/y') . ' ' . get_the_time(); ?> </button>
-          <button type="button" title="Forum" class="btn btn-default">
-          <a href="<?php echo $forum_link; ?>"><?php echo $forum_title; ?></a>
-          </button>
-        </div>
-      </div>
-      <?php
-
-			echo '</div>';
-			//echo ' &nbsp;&nbsp;[reply][share][email]</div>';
 
 			$args = array(
-				'post_type' => 'reply', // enter your custom post type
-				'posts_per_page'         => '20',
-				'orderby' => 'menu_order',
-				'order' => 'ASC',
-				'post_parent' => $topic_id,
-
-
+				'post_type' 		=> 'reply', // enter your custom post type
+				'posts_per_page'    => '50',
+				'orderby' 			=> 'menu_order',
+				'order' 			=> 'ASC',
+				'post_parent' 		=> $topic_id,
 			);
+
+			/////////// replies
 			$loopReply = new WP_Query( $args );
+
+
+			echo '<div class="replies show_reply">';
+
 
 			while( $loopReply->have_posts() ): $loopReply->the_post(); global $post;
 				$reply = get_the_content();
@@ -554,53 +621,31 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 				$forum_id = get_post_meta( get_the_ID($replyID), '_bbp_forum_id', true);
 				$topic_id = get_post_meta( get_the_ID($replyID), '_bbp_topic_id', true);
 				$menu_order = $post->menu_order;
-				//echo ' Menu order is  ' . $menu_order . '<br />';
-				//echo ' forum id is  ' . $forum_id . '<br />';
-				//echo ' topic id is  ' . $topic_id . '<br />';
 
+				echo '<div class="replyContainer show_reply">';
+					echo '<div class="threadAvatar">' . get_avatar( get_the_author_meta( 'ID' ), 16 ) . '</div>';
+					echo '<div class="threadAuthor">' . '<a href="' . bp_core_get_user_domain($author) . '">' . get_the_author() . '</a></div>';
+					echo '<div class="replyContent contentLess" id="threadContent_' . $replyID . '">' . get_the_content() . '</div>';
+						?>
+						<button type="button" title="Click to see more/less content" alt="This topic is closed to replies" class="more_button btn btn-default btn-xs" id="expandContent_<?php echo $postID; ?>">More</button>
+						<button onclick="window.location='<?php echo $postLink . '/#post-' . $replyID; ?>'" type="button" title="Go to Reply in Forum Area - Videos, Twitter, various media may work better in the main forum" class="btn btn-default btn-xs">Open</button>
 
-				echo '<div class="replyContainer">';
-				echo '<div class="threadAvatar">' . get_avatar( get_the_author_meta( 'ID' ), 16 ) . '</div>';
-				echo	'<div class="threadAuthor">' . '<a href="' . bp_core_get_user_domain($author) . '">' . get_the_author() . '</a></div>';
-				 	//'<div class="threadTopic">' . get_the_title() . '</div>';
-				echo 	'<div class="replyContent" id="threadContent_' . $replyID . '">' . get_the_content() . '</div>';
-			?>
-      <div class="threadFooter">
-        <div class="btn-group btn-group-xs threadButtonGroup" role="group" aria-label="...">
-          <button type="button" title="Click to see more/less content" class="btn btn-default" id="expandContent_<?php echo $replyID; ?>">More</button>
-          <script>
-
-			jQuery( "#expandContent_<?php echo $replyID; ?>" ).click(function() {
-				jQuery( "#expandContent_<?php echo $replyID; ?>"  ).toggleText( "Less", "More" );
-			  	jQuery( "#threadContent_<?php echo $replyID; ?>"  ).toggleClass( "heightAuto" );
-			});
-
-			</script>
-          <button onclick="window.location='<?php echo $postLink . '/#post-' . $replyID; ?>'" type="button" title="Go to Reply in Forum Area" class="btn btn-default">Open</button>
-          <?php
-					if ( is_user_logged_in()) {
-					?>
-          <button data-toggle="modal" href="#my-modal" type="button" title="" onclick="reply_to = <?php echo $replyID; ?>; topic_id = <?php echo $topic_id; ?>; forum_id = <?php echo $forum_id; ?>; replyReply(topic_id, forum_id, reply_to)" class="btn btn-default">Reply</button>
-          <?php
-
-					} else {
-					?>
-          <button onclick="lognToReply()" type="button" title="" class="btn btn-default">Reply</button>
-          <?php
-					}
-					?>
-          <button type="button" class="btn btn-default"> <?php echo tk_like_buttons (); ?> </button>
-          <!--          <button onclick="myFunction()" type="button" title="Feature not implemented yet! GO Utes!" class="btn btn-default">Spam</button>-->
-          <button type="button" title="Date" class="btn btn-default" disabled="disabled"> <?php echo get_the_date('m/d/y') . ' ' . get_the_time(); ?> </button>
-        </div>
-      </div>
-      <?php
-	 echo '</div>';
-
-			//echo '<blockquote><p>' . get_the_content() . '</p></blockquote>';
-
-		endwhile;
-		  echo '</div>';
+						<?php if ($post_status == 'closed'){ ?>
+								<button type="button" class="btn btn-default btn-xs disabled" title="Topic Closed">Topic Closed</button>
+							<?php } else {
+								if ( is_user_logged_in()) { ?>
+									<button data-toggle="modal" href="#my-modal" type="button" title="" onclick="reply_to = <?php echo $replyID; ?>; topic_id = <?php echo $topic_id; ?>; forum_id = <?php echo $forum_id; ?>; replyReply(topic_id, forum_id, reply_to)" class="btn btn-default btn-xs">Reply</button>
+								<?php } else { ?>
+									<button onclick="lognToReply()" type="button" title="" class="btn btn-default btn-xs">Reply</button>
+								<?php }
+						} ?>
+						<button type="button" class="btn btn-default btn-xs"> <?php echo tk_like_buttons (); ?> </button>
+						<button type="button" title="Date" class="btn btn-default btn-xs" disabled="disabled"> <?php echo get_the_date('m/d/y') . ' ' . get_the_time(); ?> </button>
+	      				<?php
+	 			echo '</div>';
+			endwhile;
+		  		echo '</div>';
+				echo '</div>';
 		endwhile;
 
 	endif;
@@ -639,6 +684,9 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 	echo '</div><!-- end .page .hentry .entry -->';
 
 ?>
+
+
+
     </div>
     <div class="col-md-3 col-lg-3">
       <?php if ( is_active_sidebar( 'sidebar-6' ) ) : ?>
@@ -681,43 +729,69 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
                 </label>
                 <br />
                 <?php
-                              bbp_dropdown( array(
-                                   'show_none' => __( '(No Forum)', 'bbpress' ),
-                                   'selected'  => bbp_get_form_topic_forum()
-                                             ) );
-                                        ?>
+                  bbp_dropdown( array(
+                       'show_none' => __( '(No Forum)', 'bbpress' ),
+                       'selected'  => bbp_get_form_topic_forum()
+                                 ) );
+                            ?>
               </p>
             </div>
             <!-- forum select list) -->
 
             <div class="bbp-the-content-wrapper">
-              <?php $content = '';
-                         $editor_id = 'post_content';
-                         $settings =   array(
-                             'wpautop' => false, // use wpautop?
-                             'media_buttons' => true, // show insert/upload button(s)
-                             'textarea_name' => $editor_id, // set the textarea name to something different, square brackets [] can be used here
-					    'name' => 'post_content',
-                             'textarea_rows' => 8, // rows="..."
-                             'tabindex' => '',
-                             'editor_css' => '', //  extra styles for both visual and HTML editors buttons,
-                             'editor_class' => 'form-control', // add extra class(es) to the editor textarea
-                             'teeny' => false, // output the minimal editor config used in Press This
-                             'dfw' => false, // replace the default fullscreen with DFW (supported on the front-end in WordPress 3.4)
-                             'tinymce' => false, // load TinyMCE, can be used to pass settings directly to TinyMCE using an array()
-                             'quicktags' => true // load Quicktags, can be used to pass settings directly to Quicktags using an array()
-                         );
-					?>
-              <?php wp_editor( $content, $editor_id, $settings = array() ); ?>
+				<form>
+				  <div id="toolbar">
+				    <a class="editor-button" data-wysihtml5-command="bold" title="CTRL+B" id="editor-bold">Bold</a>
+				    <a class="editor-button" data-wysihtml5-command="italic" title="CTRL+I" id="editor-italic">Italic</a>
+				    <a class="editor-button" data-wysihtml5-command="createLink" id="editor-link">Link</a>
+				    <a class="editor-button" data-wysihtml5-command="insertImage" id="editor-image">Image</a>
+				    <!-- <a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h1">H1</a>
+				    <a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h2">H2</a> -->
+				    <!-- <a data-wysihtml5-command="insertUnorderedList">insertUnorderedList</a> | -->
+				    <!-- <a data-wysihtml5-command="insertOrderedList">insertOrderedList</a> | -->
+				    <!-- <a data-wysihtml5-command="foreColor" data-wysihtml5-command-value="red">Red</a> | -->
+				    <!-- <a data-wysihtml5-command="foreColor" data-wysihtml5-command-value="green">green</a> | -->
+				    <!-- <a data-wysihtml5-command="foreColor" data-wysihtml5-command-value="blue">blue</a> | -->
+				    <!-- <a data-wysihtml5-command="insertSpeech">speech</a> -->
+				    <a class="editor-button" data-wysihtml5-action="change_view" id="editor-html">HTML</a>
+
+				    <div data-wysihtml5-dialog="createLink" style="display: none;">
+				      <label>
+				        Link:
+				        <input class="form-control" data-wysihtml5-dialog-field="href" value="http://">
+					</label>
+				      <a class="btn btn-default btn-warning" data-wysihtml5-dialog-action="cancel">Cancel</a>&nbsp;<a class="btn btn-default btn-success" data-wysihtml5-dialog-action="save">OK</a>
+				    </div>
+
+				    <div data-wysihtml5-dialog="insertImage" style="display: none;">
+				      <label>
+				        Image:
+				        <input  class="form-control" data-wysihtml5-dialog-field="src" value="http://">
+				      </label>
+				      <label>
+				        Align:
+				        <select class="form-control" data-wysihtml5-dialog-field="className">
+				          <option value="">default</option>
+				          <option value="wysiwyg-float-left">left</option>
+				          <option value="wysiwyg-float-right">right</option>
+				        </select>
+				      </label><br>
+				      <a class="btn btn-default btn-warning" data-wysihtml5-dialog-action="cancel">Cancel</a>&nbsp;<a class="btn btn-default btn-success" data-wysihtml5-dialog-action="save">OK</a>
+				    </div>
+
+				  </div>
+				  <textarea class="form-control" name="post_content" id="textarea" placeholder="Enter text ..."></textarea>
+				</form>
             </div>
-            <!--                    <p>
-                      <input name="bbp_topic_subscription" id="bbp_topic_subscription" type="checkbox" value="bbp_subscribe" tabindex="103">
-                      <label for="bbp_topic_subscription"> Notify me of follow-up replies via email </label>
-                    </p>-->
             <div class="bbp-submit-wrapper">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-              <button type="submit"  id="bbp_reply_submit" name="bbp_reply_submit" class="btn btn-default">Submit</button>
-            </div>
+				<div class="pull-left">
+			  		<input class="btn btn-default" type="reset" value="Clear">
+				</div>
+				<div class="pull-right">
+              		<button type="button" class="btn btn-default btn-warning" data-dismiss="modal">Cancel</button>
+              		<button type="submit"  id="bbp_reply_submit" name="bbp_reply_submit" class="btn btn-default btn-success">Submit</button>
+				</div>
+			</div>
             <input type="hidden" name="topic_id" id="topic_id" value="<?php echo $topic_id; ?>">
             <input type="hidden" name="post_parent" id="post_parent" value="<?php echo $parentID; ?>">
             <input type="hidden" name="bbp_reply_to" id="bbp_reply_to" value="">
@@ -729,6 +803,7 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
             <input type="hidden" name="task" id="postTask" value="">
           </fieldset>
         </form>
+
       </div>
     </div>
     <!-- /.modal-content -->

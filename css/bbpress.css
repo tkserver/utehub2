@@ -29,12 +29,12 @@ display:none !important;
 .bbp-forum-title {
 	font-size: 20px;
     font-weight: bold;
-    color:#3E3E3E;	
+    color:#3E3E3E;
 }
 .bbp-topic-permalink {
 	color: darkred;
     	font-weight: bold;
-    	font-size: 15px;	
+    	font-size: 15px;
 }
 #bbpress-forums hr {
 	margin: 0 0 24px 0;
@@ -736,10 +736,17 @@ body.reply-edit .bbp-reply-form code {
 	display: inline;
 }
 
-div.bbp-submit-wrapper {
+/*div.bbp-submit-wrapper {
 	margin-top: 15px;
 	float: right;
 	clear: both;
+}*/
+
+/* for new modal form */
+div.bbp-submit-wrapper {
+    margin-top: 15px;
+    /* float: right; */
+    clear: both;
 }
 
 p.form-allowed-tags {

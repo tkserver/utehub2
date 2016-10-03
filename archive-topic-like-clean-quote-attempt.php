@@ -666,11 +666,11 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
                 </label>
                 <br />
                 <?php
-                              bbp_dropdown( array(
-                                   'show_none' => __( '(No Forum)', 'bbpress' ),
-                                   'selected'  => bbp_get_form_topic_forum()
-                                             ) );
-                                        ?>
+	              bbp_dropdown( array(
+	                   'show_none' => __( '(No Forum)', 'bbpress' ),
+	                   'selected'  => bbp_get_form_topic_forum()
+	                             ) );
+	                        ?>
               </p>
             </div>
             <!-- forum select list) -->
@@ -725,35 +725,6 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 <!------------------ /Modal --------------------->
 
 <?php
-
-function tk_get_forums(){
-
-	// WP_Query arguments
-	$args = array (
-		'post_type'              => array( 'forum' ),
-		'post_status'            => array( 'publish' ),
-		'pagination'             => false,
-		'posts_per_page' => 100	);
-
-	// The Query
-	$get_forums = new WP_Query( $args );
-
-	// The Loop
-	if ( $get_forums->have_posts() ) {
-		while ( $get_forums->have_posts() ) {
-			$get_forums->the_post();
-			$forum_id = get_the_ID();
-			$forum_name = get_the_title();
-			echo '<option value="' . $forum_id . '">' . $forum_name . '</option>';
-		}
-	} else {
-		// no posts found
-	}
-
-	// Restore original Post Data
-	wp_reset_postdata();
-
-	}
 
 	// Gets footer.php
 	get_footer();

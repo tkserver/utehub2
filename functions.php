@@ -13,9 +13,75 @@
  * @return void
 
  */
+ function add_jquerydialog_js() {
+     wp_enqueue_script( 'jquery-ui-dialog' );
+ }
+ add_action( 'wp_enqueue_scripts', 'add_jquerydialog_js' );
+
+
+ /**
+  * Proper way to enqueue scripts and styles.
+  */
+ function tk_wysihtml5() {
+     wp_enqueue_style( 'style-wysihtml5', get_stylesheet_uri() );
+     wp_enqueue_script( 'script-wysihtml5', get_template_directory_uri() . '/js/wysihtml5-0.3.0.min.js', array(), '1.0.0', true );
+ }
+ add_action( 'wp_enqueue_scripts', 'tk_wysihtml5' );
+
+ /**
+  * Proper way to enqueue scripts and styles.
+  */
+ function tk_wysihtml5_advanced() {
+     wp_enqueue_style( 'style-wysihtml5-advanced', get_stylesheet_uri() );
+     wp_enqueue_script( 'script-wysihtml5-advanced', get_template_directory_uri() . '/js/advanced.js', array(), '1.0.0', true );
+ }
+ add_action( 'wp_enqueue_scripts', 'tk_wysihtml5_advanced' );
 
 
 
+ /**
+  * Enqueue theme style-file
+  */
+ function tk_add_fontawesome_stylesheet() {
+     // Respects SSL, Style.css is relative to the current file
+     wp_register_style( 'tkLike', plugins_url('/css/font-awesome.min.css', __FILE__) );
+     wp_enqueue_style( 'tkLike' );
+     }
+     /**
+      * Register with hook 'wp_enqueue_scripts', which can be used for front end CSS and JavaScript
+      */
+ add_action( 'wp_enqueue_scripts', 'tk_add_fontawesome_stylesheet' );
+
+
+
+// brought in from the threaded view file...
+function tk_get_forums(){
+
+ 	// WP_Query arguments
+ 	$args = array (
+ 		'post_type'              => array( 'forum' ),
+ 		'post_status'            => array( 'publish' ),
+ 		'pagination'             => false,
+ 		'posts_per_page' => 100	);
+
+ 	// The Query
+ 	$get_forums = new WP_Query( $args );
+
+	 	// The Loop
+	 	if ( $get_forums->have_posts() ) {
+	 		while ( $get_forums->have_posts() ) {
+	 			$get_forums->the_post();
+	 			$forum_id = get_the_ID();
+	 			$forum_name = get_the_title();
+	 			echo '<option value="' . $forum_id . '">' . $forum_name . '</option>';
+	 		}
+	 	} else {
+ 		// no posts found
+ 	}
+
+ 	// Restore original Post Data
+ 	wp_reset_postdata();
+}
 
 
 // customize lost password text
