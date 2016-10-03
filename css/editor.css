@@ -258,7 +258,7 @@ textarea {
   height: 100%;
   border: 0;
   resize: none;
-  white-space: pre;
+  /*white-space: pre;*/
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
   padding: 10px;

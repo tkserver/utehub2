@@ -8,7 +8,7 @@
  */
 
 ?>
-CONTENT-SINGLE-REPLY.PHP
+<!-- CONTENT-SINGLE-REPLY.PHP -->
 <div id="bbpress-forums">
 
 	<?php bbp_breadcrumb(); ?>

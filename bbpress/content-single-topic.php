@@ -12,7 +12,7 @@
 <div id="bbpress-forums">
 
 
-CONTENT-SINGLE-TOPIC.PHP
+<!-- CONTENT-SINGLE-TOPIC.PHP -->
 
 		<?php if ( bbp_has_replies() ) : ?>
 

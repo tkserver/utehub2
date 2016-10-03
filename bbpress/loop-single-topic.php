@@ -8,7 +8,7 @@
  */
 
 ?>
-HI THERE
+<!-- HI THERE -->
 <ul id="bbp-topic-<?php bbp_topic_id(); ?>" <?php bbp_topic_class(); ?>>
 
 	<li class="bbp-topic-title">
