@@ -1,3 +1,5 @@
+if (jQuery('#my-modal').length > 0) {
+
 /**
  * Full HTML5 compatibility rule set
  * These rules define which tags and css classes are supported and which tags should be specially treated.
@@ -555,3 +557,5 @@ var editor = new wysihtml5.Editor("textarea", {
   stylesheets:  "wp-content/themes/utehub2/css/stylesheet.css",
   parserRules:  wysihtml5ParserRules
 });
+
+}
