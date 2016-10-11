@@ -1,28 +1,67 @@
 /*
-
 Theme Name: Ute Hub 2.1.1
-
 Theme URI: http://www.tkserver.com
-
 Author: Tony Korologos
-
 Author URI: http://www.tkserver.com
-
 Description: WordPress Bootstrap 3.0.0 Custom Theme
-
 Version: 1.1
-
 License: GNU General Public License v2 or later
-
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-
 Tags: bootstrap
-
 Text Domain: wpbootstrap
-
-
-
 */
+
+/* hack class to get rid of bootstrap padding */
+.no-pad {
+    padding: 0!important;
+}
+/* put space between the cancel and submit buttons */
+.bbp_reply_submit, #newPost_submit{
+    margin-left: 5px;
+}
+/* this prevents the cancel and submit buttons from being unclickable */
+.wp-editor-wrap {
+clear: both;
+}
+
+div#new-message {
+}
+#wp-link-close {
+    display: none;
+}
+#wp-link-wrap {
+    height: 200px !important;
+    margin-top: -100px;
+}
+#wp-link p.howto, div#search-panel {
+    display: none !important;
+}
+
+
+.reply-dialog {
+    height: 0;
+    overflow: hidden;
+    /*background-color: #ededed;*/
+    border-radius: 5px;
+    border-width: 0;
+    width: 100%;
+    float: left;
+}
+
+#dialog {
+    height: 0;
+    overflow: hidden;
+    /*background-color: #ededed;*/
+    border-radius: 5px;
+    border-width: 0;
+    width: 100%;
+    float: left;
+}
+textarea.form-control {
+    /* height: auto; */
+    height: 150px;
+}
+
 .show_reply {
     display: block;
 }
@@ -297,25 +336,34 @@ a.liked:focus {
 }
 
 /**************************/
-
+.submit-header {
+    margin-top: 10px;
+    float: left;
+    width: 100%;
+    padding: 10px;
+}
 .fahk {
     margin-top: 10px;
     margin-bottom: 10px;
 }
 
+.cancelPost {
+    margin-right: 10px;
+}
 h1.threaded-title {
     margin: 0;
     font-size: 30px;
     font-weight: bold;
 }
-
-.expand-all {
-    margin-right: 10px;
-    padding: 7px;
+h1#h1_new_message {
+    margin-top: 0;
 }
-button#threaded-new-message {
-    /*top: -9px;*/
-    position: relative;
+
+.expand-all, .newMessage, .newMessage-disabled, #threaded-new-message-cancel {
+    margin-left: 5px;
+}
+button#threaded-new-message, button#threaded-new-message-cancel {
+    width: 100px;
 }
 
 div.well-tiny {

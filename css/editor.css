@@ -16,7 +16,17 @@
   position: relative;
 }
 
-
+textarea {
+    -webkit-user-select: text !important;
+    -khtml-user-select: text !important;
+    -moz-user-select: text !important;
+    -ms-user-select: text !important;
+    user-select: text !important;
+    /*to make sure that background color and text color is not the same (from the answers above)*/
+    background-color:#fff !important;
+    color:#733E27 !important;
+ }
+ 
 
 .commands {
   /*border-left: 1px solid #ddd;
@@ -251,28 +261,32 @@ section {
   bottom: 0;
 }
 
+.quicktags-toolbar {
+    background: #eee !important;
+}
+
 textarea {
-  font-family: "Courier New", Courier, monospace;
+  /*font-family: "Courier New", Courier, monospace;
   width: 100%;
   background: transparent;
   height: 100%;
   border: 0;
-  resize: none;
+  resize: none;*/
   /*white-space: pre;*/
-  border-top-left-radius: 4px;
+  /*border-top-left-radius: 4px;
   border-top-right-radius: 4px;
   padding: 10px;
   word-wrap: normal;
   -ms-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
-  box-sizing: border-box;
+  box-sizing: border-box;*/
 }
 
 textarea:focus {
-  box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.3);
+  /*box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.3);
   background: rgba(255, 255, 255, 0.4);
-  outline: 0;
+  outline: 0;*/
 }
 
 a.fork {

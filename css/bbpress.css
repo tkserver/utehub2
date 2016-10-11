@@ -745,7 +745,7 @@ body.reply-edit .bbp-reply-form code {
 /* for new modal form */
 div.bbp-submit-wrapper {
     margin-top: 15px;
-    /* float: right; */
+    float: right;
     clear: both;
 }
 
