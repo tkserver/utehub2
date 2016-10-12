@@ -69,7 +69,7 @@ jQuery(document).ready(function() {
 		jQuery("#bbp_topic_title").addClass('hidden');
 		jQuery("#bbp_forum_id").addClass('hidden');
 		jQuery(".hide_on_reply").addClass('hidden');
-		jQuery("#h1_new_message").text("Post Reply");
+		//jQuery("#h1_new_message").text("Post Reply");
 		jQuery('.cancelPost').not(this).addClass('replyPost').removeClass('cancelPost btn-warning').text('Reply');
 		task = undefined;
 	})
@@ -96,7 +96,7 @@ jQuery(document).on('click', '.replyReply', function(){
 	jQuery("#bbp_topic_title").addClass('hidden');
 	jQuery("#bbp_forum_id").addClass('hidden');
 	jQuery(".hide_on_reply").addClass('hidden');
-	jQuery("#h1_new_message").text("Post Reply");
+	//jQuery("#h1_new_message").text("Post Reply");
 	jQuery('.cancelPost').not(this).addClass('replyReply').removeClass('cancelPost btn-warning').text('Reply');
 	task = undefined;
 })
