@@ -18,6 +18,8 @@
  }
  add_action( 'wp_enqueue_scripts', 'add_jquerydialog_js' );
 
+/* add tinymce to the theme  */
+wp_enqueue_script( 'tinymce_js', includes_url( 'js/tinymce/' ) . 'wp-tinymce.php', array( 'jquery' ), false, true );
 
  /**
   * Proper way to enqueue scripts and styles.
