@@ -51,11 +51,11 @@ div#new-message {
 #dialog {
     height: 0;
     overflow: hidden;
-    /*background-color: #ededed;*/
     border-radius: 5px;
     border-width: 0;
     width: 100%;
     float: left;
+    margin-bottom: 20px;
 }
 textarea.form-control {
     /* height: auto; */
@@ -2439,3 +2439,51 @@ h1, .footerWell {
   .wysiwyg-color-red {
     color: red!important;
   }
+
+
+  .mce-btn-group .mce-btn {
+      float: left;
+  }
+
+  /*.mceEditor table {
+  max-width:none;  Bug in computation of fullscreen
+  }*/
+
+
+.mce-container, .mce-container-body {
+
+     clear: both;
+ }
+
+  @media(max-width:360px) {
+
+
+
+
+  /* make the toolbar wrap
+  .mceToolbar td {
+      display:table-row;
+      float: left;
+  }
+  .mceToolbar td:nth-of-type(11){
+      clear: left;
+  }
+  */
+  /* awesome below stuff!  */
+  .mce-window                         {width:auto !important; top:0px !important; left:0px !important; right:0px !important; bottom:0px !important; background:none !important;}
+  .mce-window-head                    {background:#FFFFFF !important;}
+  .mce-window-body                    {background:#FFFFFF !important;}
+  .mce-foot > .mce-container-body     {padding:10px !important; width:80% !important;}
+  .mce-panel                          {max-width:100% !important;}
+  .mce-container                      {max-width:100% !important; height:auto !important; overflow:auto;}
+  .mce-container-body                 {max-width:100% !important; height:auto !important; overflow:auto;}
+  .mce-form                           {padding:10px !important;}
+  .mce-tabs                           {max-width:100% !important;}
+  .mce-formitem                       {margin:10px 0 !important;}
+  .mce-abs-layout-item                {position:static !important; width:auto !important;}
+  .mce-abs-layout-item.mce-label      {display:block !important;}
+  .mce-abs-layout-item.mce-textbox    {-webkit-box-sizing:border-box !important; -moz-box-sizing:border-box !important; box-sizing:border-box !important; display:block !important; width:100% !important;}
+  .mce-abs-layout-item.mce-combobox   {display:flex !important;}
+  .mce-abs-layout-item.mce-combobox > .mce-textbox {-ms-flex:1 1 auto; -webkit-flex:1 1 auto; flex:1 1 auto; height:29px !important; width:80% !important;}
+  .mce-container-body.mce-window-body.mce-abs-layout iframe {height:500px !important;} /*this only use with responsive file manager 9*/
+}

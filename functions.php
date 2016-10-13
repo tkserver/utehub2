@@ -1,8 +1,5 @@
 <?php
 
-// below removes admin bar - turned off for now
-//add_filter('show_admin_bar', '__return_false');
-
 /**
 
  * Enqueues scripts and styles for front end.
@@ -17,23 +14,23 @@
 
  */
 
- // below load jquery dialog into wordpress
- // function add_jquerydialog_js() {
- //     wp_enqueue_script( 'jquery-ui-dialog' );
- // }
- // add_action( 'wp_enqueue_scripts', 'add_jquerydialog_js' );
+ add_filter( 'bbp_verify_nonce_request_url', 'my_bbp_verify_nonce_request_url', 999, 1 );
+function my_bbp_verify_nonce_request_url( $requested_url )
+{
+    return 'http://localhost:8888' . $_SERVER['REQUEST_URI'];
+}
 
 
-// get rid of add media button in rich text editor
- function RemoveAddMediaButtonsForNonAdmins(){
-     if ( !current_user_can( 'manage_options' ) ) {
-         remove_action( 'media_buttons', 'media_buttons' );
-     }
+ function add_jquerydialog_js() {
+     wp_enqueue_script( 'jquery-ui-dialog' );
  }
- add_action('admin_head', 'RemoveAddMediaButtonsForNonAdmins');
+ add_action( 'wp_enqueue_scripts', 'add_jquerydialog_js' );
 
-//add_filter( 'user_can_richedit' , '__return_false', 50 );
-
+/* add tinymce to the theme  */
+function tk_tinymce() {
+     wp_enqueue_script( 'tinymce_js', includes_url( 'js/tinymce/' ) . 'wp-tinymce.php', array( 'jquery' ), false, true );
+}
+add_action( 'wp_enqueue_scripts', 'tk_tinymce' );
 
 
 function utehubjs() {
@@ -43,38 +40,19 @@ function utehubjs() {
 add_action( 'wp_enqueue_scripts', 'utehubjs' );
 
 
- /**
-  * Proper way to enqueue scripts and styles.
-  */
- // function tk_wysihtml5() {
- //     wp_enqueue_style( 'style-wysihtml5', get_stylesheet_uri() );
- //     wp_enqueue_script( 'script-wysihtml5', get_template_directory_uri() . '/js/wysihtml5-0.3.0.min.js', array(), '1.0.0', true );
- // }
- // add_action( 'wp_enqueue_scripts', 'tk_wysihtml5' );
-
- /**
-  * Proper way to enqueue scripts and styles.
-  */
- // function tk_wysihtml5_advanced() {
- //     wp_enqueue_style( 'style-wysihtml5-advanced', get_stylesheet_uri() );
- //     wp_enqueue_script( 'script-wysihtml5-advanced', get_template_directory_uri() . '/js/advanced.js', array(), '1.0.0', true );
- // }
- // add_action( 'wp_enqueue_scripts', 'tk_wysihtml5_advanced' );
-
-
 
  /**
   * Enqueue theme style-file
   */
- // function tk_add_fontawesome_stylesheet() {
- //     // Respects SSL, Style.css is relative to the current file
- //     wp_register_style( 'tkLike', plugins_url('/css/font-awesome.min.css', __FILE__) );
- //     wp_enqueue_style( 'tkLike' );
- //     }
- //     /**
- //      * Register with hook 'wp_enqueue_scripts', which can be used for front end CSS and JavaScript
- //      */
- // add_action( 'wp_enqueue_scripts', 'tk_add_fontawesome_stylesheet' );
+ function tk_add_fontawesome_stylesheet() {
+     // Respects SSL, Style.css is relative to the current file
+     wp_register_style( 'tkLike', plugins_url('/css/font-awesome.min.css', __FILE__) );
+     wp_enqueue_style( 'tkLike' );
+     }
+     /**
+      * Register with hook 'wp_enqueue_scripts', which can be used for front end CSS and JavaScript
+      */
+ add_action( 'wp_enqueue_scripts', 'tk_add_fontawesome_stylesheet' );
 
 
 
@@ -667,13 +645,21 @@ add_filter('widget_text', 'do_shortcode');
 
 
 function cwd_wp_bootstrap_scripts_styles() {
+
   // Loads Bootstrap minified JavaScript file.
+
   wp_enqueue_script('bootstrapjs', '//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js', array('jquery'),'3.0.0', true );
+
   // Loads Bootstrap minified CSS file.
+
   wp_enqueue_style('bootstrapwp', '//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css', false ,'3.0.0');
+
   // Loads our main stylesheet.
+
   wp_enqueue_style('style', get_stylesheet_directory_uri() . '/style.css', array('bootstrapwp') ,'1.0');
+
 }
+
 add_action('wp_enqueue_scripts', 'cwd_wp_bootstrap_scripts_styles');
 
 

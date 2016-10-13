@@ -278,19 +278,19 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 
 		// Create post object
 		$post_id = wp_insert_post(array (
-		  'post_title'    => '',
-		  'post_content'  => $post_content,
-		  'post_status'   => 'publish',
-		  'post_author'   => $post_author,
-		  'post_type' 	   => 'reply',
-		  'post_parent' => $post_parent
+		  'post_title'    	=> '',
+		  'post_content'  	=> $post_content,
+		  'post_status'   	=> 'publish',
+		  'post_author'   	=> $post_author,
+		  'post_type' 	   	=> 'reply',
+		  'post_parent' 	=> $post_parent
 		));
 
 		if ($post_id) {
 		// insert post meta
 		add_post_meta($post_id, '_bbp_forum_id', $forum_id, false);
 		add_post_meta($post_id, '_bbp_topic_id', $topic_id, false);
-		//add_post_meta($post_id, '_bbp_reply_to', $reply_to, false);
+		add_post_meta($post_id, '_bbp_reply_to', $reply_to, false);
 		add_post_meta($post_id, '_bbp_author_ip', $replyUserIP, false);
 		$task = "";
 		unset($_POST);
@@ -351,25 +351,7 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 		        	?>
 		          </p>
 		        <!-- forum select list) -->
-		        <?php
-							$content = '';
-                           	$editor_id = 'post_content';
-                           	$settings =   array(
-                               	'wpautop' => false, // use wpautop?
-                               	'media_buttons' => true, // show insert/upload button(s)
-                               	'textarea_name' => 'post_content', // set the textarea name to something different, square brackets [] can be used here
-  					    	 	'name' => 'post_content',
-                               	'textarea_rows' => 8, // rows="..."
-                               	'tabindex' => '',
-                               	'editor_css' => '', //  extra styles for both visual and HTML editors buttons,
-                               	'editor_class' => 'form-control', // add extra class(es) to the editor textarea
-                               	'teeny' => false, // output the minimal editor config used in Press This
-                               	'dfw' => false, // replace the default fullscreen with DFW (supported on the front-end in WordPress 3.4)
-                               	'tinymce' => false, // load TinyMCE, can be used to pass settings directly to TinyMCE using an array()
-                               	'quicktags' => true // load Quicktags, can be used to pass settings directly to Quicktags using an array()
-                           );
-  					?>
-                <?php wp_editor( $content, $editor_id, $settings = array() ); ?>
+				<textarea id="post_content" name="post_content"></textarea>
 
 		        <input type="hidden" name="topic_id" id="topic_id" value="<?php if(isset($topic_id)){echo $topic_id;} ?>">
 		        <input type="hidden" name="post_parent" id="post_parent" value="<?php if(isset($parentID)){echo $parentID;} ?>">
@@ -488,6 +470,7 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 					$topic_id = get_post_meta( get_the_ID($replyID), '_bbp_topic_id', true);
 					$menu_order = $post->menu_order;
 
+
 					echo '<div class="replyContainer show_reply">';
 						echo '<div class="threadAvatar">' . get_avatar( get_the_author_meta( 'ID' ), 16 ) . '</div>';
 						echo '<div class="threadAuthor">' . '<a href="' . bp_core_get_user_domain($author) . '">' . get_the_author() . '</a></div>';
@@ -500,7 +483,7 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 									<button type="button" class="btn btn-default btn-xs disabled" title="Topic Closed">Topic Closed</button>
 								<?php } else {
 									if ( is_user_logged_in()) { ?>
-										<button type="button" title="" onclick="reply_to = <?php echo $replyID; ?>; topic_id = <?php echo $topic_id; ?>; forum_id = <?php echo $forum_id; ?>;" class="replyReply btn btn-default btn-xs">Reply</button>
+										<button type="button" id="replyPost_<?php echo $parentID; ?>" title="" onclick="reply_to = <?php echo $replyID; ?>; replyPost_id = <?php echo 'replyPost_'.$parentID; ?>; topic_id = <?php echo $parentID; ?>; forum_id = <?php echo $forum_id; ?>;" class="replyReply btn btn-default btn-xs">Reply</button>
 									<?php } else { ?>
 										<button onclick="lognToReply()" type="button" title="" class="btn btn-default btn-xs">Reply</button>
 									<?php }
@@ -523,26 +506,9 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 				            	<button type="button" class="btn btn-default btn-warning btn-sm pull-right" onclick="cancelPost()">Cancel</button>
 							</div>
 				        </div>
-						<?php $content = '';
-								   $editor_id = "post_content_" . $topic_id;
-								   $post_content_id = "post_content_" . $topic_id;
-								   $settings =   array(
-									   'wpautop' => false, // use wpautop?
-									   'media_buttons' => false, // show insert/upload button(s)
-									   'textarea_name' => $post_content_id, // set the textarea name to something different, square brackets [] can be used here
-									   'name' => $post_content_id,
-									   'textarea_rows' => 8, // rows="..."
-									   'tabindex' => '',
-									   'editor_css' => '', //  extra styles for both visual and HTML editors buttons,
-									   'editor_class' => 'form-control', // add extra class(es) to the editor textarea
-									   'teeny' => false, // output the minimal editor config used in Press This
-									   'dfw' => false, // replace the default fullscreen with DFW (supported on the front-end in WordPress 3.4)
-									   'tinymce' => false, // load TinyMCE, can be used to pass settings directly to TinyMCE using an array()
-									   'quicktags' => true // load Quicktags, can be used to pass settings directly to Quicktags using an array()
-								   );
-							  ?>
-						<?php wp_editor( $content, $editor_id, $settings = array() ); ?>
+						<?php $post_content_id = "post_content_" . $topic_id; ?>
 
+						<textarea id="<?php echo $post_content_id; ?>" name="post_content"></textarea>
 				        <input type="hidden" name="topic_id" id="topic_id" value="<?php if(isset($topic_id)){echo $topic_id;} ?>">
 				        <input type="hidden" name="post_parent" id="post_parent" value="<?php if(isset($parentID)){echo $parentID;} ?>">
 				        <input type="hidden" name="bbp_reply_to" id="bbp_reply_to" value="">
