@@ -48,15 +48,16 @@ div#new-message {
     float: left;
 }
 
-#dialog {
+#dialog, .editor {
     height: 0;
     overflow: hidden;
     border-radius: 5px;
     border-width: 0;
     width: 100%;
     float: left;
-    margin-bottom: 20px;
+    margin-bottom: 0;
 }
+
 textarea.form-control {
     /* height: auto; */
     height: 150px;
@@ -605,6 +606,7 @@ border: none !important;
 	margin-left: 20px;
 	padding: 5px;
 	float:left;
+     width: 100%;
 }
 
 .threadWell {

@@ -19,6 +19,11 @@ $plugin_path = $wordpress_path.'wp-content/plugins/';
 $my_plugin = $plugin_path.'/bbpress/bbpress.php';
 // Check to see if plugin is already active
 
+$nonce = wp_create_nonce( 'tk_forum_message' );
+//echo $nonce;
+
+$author_id = get_current_user_id();
+
 //I wonder what this is?
 if(is_plugin_active($my_plugin)) {
 	deactivate_plugins($my_plugin);
@@ -299,7 +304,6 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 
 }
 	?>
-
 <div class="container">
   <div class="row mobileContent browserContent">
     <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 well well-sm" id="registerContent">
@@ -396,7 +400,7 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 			$menu_order = $post->menu_order;
 			$forum_id = get_post_meta( get_the_ID(), '_bbp_forum_id', true);
 			$topic_id = get_post_meta( get_the_ID(), '_bbp_topic_id', true);
-	        $thread_url =  get_site_url() . '?th='.$parentID;
+	          $thread_url =  get_site_url() . '?th='.$parentID;
 			$forum_title = get_the_title($forum_id);
 			$forum_link = get_permalink($forum_id);
 			$post_status = get_post_status();
@@ -425,7 +429,15 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 								<button type="button" class="btn btn-default btn-xs disabled" title="Topic Closed">Topic Closed</button>
 							<?php } else {
 								if ( is_user_logged_in()) { ?>
-									<button type="button" id="replyPost_<?php echo $parentID; ?>" title="" onclick="replyPost_id = <?php echo 'replyPost_'.$parentID; ?>; topic_id = <?php echo $parentID; ?>; forum_id = <?php echo $forum_id; ?>;" class="replyPost btn btn-default btn-xs">Reply</button>
+									<button type="button" id="replyPost_<?php echo $parentID; ?>"
+										data-nonce="<?php echo $nonce; ?>"
+										data-task="replyPost"
+										data-user-id="<?php echo $author_id; ?>"
+										onclick="replyPost_id = <?php echo $parentID; ?>;
+										topic_id = <?php echo $parentID; ?>;
+										forum_id = <?php echo $forum_id; ?>;
+										" class="comment btn btn-default btn-xs">Reply
+									</button>
 							<?php } else { ?>
 								<button onclick="lognToReply()" type="button" title="" class="btn btn-default btn-xs">Reply</button>
 							<?php }
@@ -441,11 +453,11 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 						</button>
 			  			<!-- </div>
 						</div> -->
-						<?php
 
-				echo '</div>';
+				</div>
+				<div class="editor"></div>
 
-
+<?php
 			$args = array(
 				'post_type' 		=> 'reply', // enter your custom post type
 				'posts_per_page'    => '50',
@@ -483,49 +495,31 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 									<button type="button" class="btn btn-default btn-xs disabled" title="Topic Closed">Topic Closed</button>
 								<?php } else {
 									if ( is_user_logged_in()) { ?>
-										<button type="button" id="replyPost_<?php echo $parentID; ?>" title="" onclick="reply_to = <?php echo $replyID; ?>; replyPost_id = <?php echo 'replyPost_'.$parentID; ?>; topic_id = <?php echo $parentID; ?>; forum_id = <?php echo $forum_id; ?>;" class="replyReply btn btn-default btn-xs">Reply</button>
+										<button type="button" id="replyPost_<?php echo $parentID; ?>"
+											data-nonce="<?php echo $nonce; ?>"
+											data-task="replyPost"
+											data-reply-id="<?php echo $replyID; ?>"
+											data-user-id="<?php echo $author_id; ?>"
+											onclick="replyPost_id = <?php echo $parentID; ?>;
+											topic_id = <?php echo $parentID; ?>;
+											forum_id = <?php echo $forum_id; ?>;
+											" class="comment btn btn-default btn-xs">Reply
+										</button>
 									<?php } else { ?>
 										<button onclick="lognToReply()" type="button" title="" class="btn btn-default btn-xs">Reply</button>
 									<?php }
 							} ?>
 							<button type="button" class="btn btn-default btn-xs"> <?php echo tk_like_buttons (); ?> </button>
 							<button type="button" title="Date" class="btn btn-default btn-xs" disabled="disabled"> <?php echo get_the_date('m/d/y') . ' ' . get_the_time(); ?> </button>
-		      				<?php
-		 			echo '</div>';
-				endwhile;
-		  		echo '</div>';
-				?>
-				<div id="reply-dialog-<?php echo $topic_id; ?>" class="reply-dialog" title="New Message">
-				    <form id="reply-post" name="new-post" method="post" action="">
-						<div class="submit-header col-xs-12 no-pad">
-							<div class="col-xs-6 no-pad">
-								<h1 id="h1_new_message" class="pull-left">Post Reply</h1>
-							</div>
-							<div class="col-xs-6 no-pad">
-				            	<button type="submit" id="bbp_reply_submit_<?php echo $topic_id; ?>" name="bbp_reply_submit" class="btn btn-sm btn-default btn-success pull-right bbp_reply_submit">Submit</button>
-				            	<button type="button" class="btn btn-default btn-warning btn-sm pull-right" onclick="cancelPost()">Cancel</button>
-							</div>
-				        </div>
-						<?php $post_content_id = "post_content_" . $topic_id; ?>
+		 			</div>
+					<div class="editor"></div>
 
-						<textarea id="<?php echo $post_content_id; ?>" name="post_content"></textarea>
-				        <input type="hidden" name="topic_id" id="topic_id" value="<?php if(isset($topic_id)){echo $topic_id;} ?>">
-				        <input type="hidden" name="post_parent" id="post_parent" value="<?php if(isset($parentID)){echo $parentID;} ?>">
-				        <input type="hidden" name="bbp_reply_to" id="bbp_reply_to" value="">
-				        <input type="hidden" name="post_author" id="post_author" value="<?php $post_author = get_current_user_id(); echo $post_author; ?>">
-				        <input type="hidden" name="forum_id" id="forum_id" value="<?php echo $forum_id; ?>">
-						<input type="hidden" name="bbp_forum_id" id="bbp_forum_id" value="<?php echo $forum_id; ?>">
-
-
-				        <input type="hidden" name="task" id="postTask" value="replyPost">
-				        <?php wp_nonce_field('tk_forum_message'); ?>
-				      </form>
+				<?php endwhile; ?>
+		  		</div>
 				</div>
-				<?php
-			echo '</div>';
-		endwhile;
+		<?php endwhile; ?>
 
-	endif;
+	<?php endif; ?>
 	?>
 
     <div class="col-sm-12 text-center">

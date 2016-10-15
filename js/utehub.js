@@ -1,5 +1,44 @@
 task = "";
 
+
+jQuery(document).ready(function(){
+
+
+    jQuery(document).on('click', ".comment", function() {
+
+	    var nonce = this.getAttribute('data-nonce');
+	    var task = this.getAttribute('data-task');
+	    var user_id = this.getAttribute('data-user-id');
+	    var reply_id = this.getAttribute('data-reply-id');
+
+	    var editor_url = "http://localhost:8888/utehub.com/wp-content/themes/utehub2/dialog-reply.php?replyPost_id=" + replyPost_id
+	    					+ "&topic_id=" + topic_id
+						+ "&forum_id=" + forum_id
+						+ "&user_id=" + user_id
+						+ "&nonce=" + nonce
+						+ "&task=" + task
+						+ "&reply_id=" + reply_id;
+	 	//alert(editor_url);
+
+
+	    //alert('replyPost_id is ' + replyPost_id);
+
+	   jQuery(this).parent().next("div.editor").load(editor_url).animate({height:300},700);
+	   jQuery(this).addClass("cancel").removeClass("comment").text("Cancel");
+
+    })
+
+    jQuery(document).on('click', ".cancel", function() {
+
+	   jQuery(this).parent().next("div.editor").animate({height:0},700).empty().css("margin-bottom", "0");
+	   jQuery(this).addClass("comment").removeClass("cancel").text("Reply");
+
+
+    })
+
+});
+
+
 function tinyNewPost() {
 		tinymce.init( {
 			mode : "exact",
@@ -57,7 +96,7 @@ function cancelPost(){
 
 function cancelNewPost(){
 	jQuery("#dialog").animate({height:0},700);
-    jQuery("#threaded-new-message-cancel").text('New Message').removeClass("cancelNewPost btn-warning").addClass("btn-success").attr("id","threaded-new-message");;
+    	jQuery("#threaded-new-message-cancel").text('New Message').removeClass("cancelNewPost btn-warning").addClass("btn-success").attr("id","threaded-new-message");;
 	tinymce.remove();
 	//alert('Number of editors: ' + tinyMCE.editors.length);
 
