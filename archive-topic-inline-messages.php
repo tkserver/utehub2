@@ -461,7 +461,7 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 			$args = array(
 				'post_type' 		=> 'reply', // enter your custom post type
 				'posts_per_page'    => '50',
-				'orderby' 			=> 'menu_order',
+				'orderby' 		=> 'menu_order',
 				'order' 			=> 'ASC',
 				'post_parent' 		=> $topic_id,
 			);
@@ -511,6 +511,7 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 							} ?>
 							<button type="button" class="btn btn-default btn-xs"> <?php echo tk_like_buttons (); ?> </button>
 							<button type="button" title="Date" class="btn btn-default btn-xs" disabled="disabled"> <?php echo get_the_date('m/d/y') . ' ' . get_the_time(); ?> </button>
+							Menu order: <?php echo $menu_order; ?>
 		 			</div>
 					<div class="editor"></div>
 
