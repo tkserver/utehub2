@@ -21,6 +21,12 @@ function my_bbp_verify_nonce_request_url( $requested_url )
 }
 
 
+function add_jquery_effects_core_js() {
+    wp_enqueue_script( 'jquery-effects-core' );
+}
+add_action( 'wp_enqueue_scripts', 'add_jquery_effects_core_js' );
+
+
  function add_jquerydialog_js() {
      wp_enqueue_script( 'jquery-ui-dialog' );
  }

@@ -80,6 +80,7 @@ function tinyNewPostReply(topic_id) {
 function myFunction() {
 	alert("Feature not implemented yet! GO UTES!");
 }
+
 function lognToReply() {
 	alert("Please login (or register) to post a message. GO UTES!");
 }
@@ -150,104 +151,95 @@ jQuery(document).ready(function() {
 
 // REPLY REPLY
 jQuery(document).on('click', '.replyReply', function(){
-	alert('reply id ' + reply_to);
-		jQuery("#dialog").height(0);
-		jQuery(this).text('Cancel').addClass("btn-warning cancelPost").removeClass("replyReply");
-		//cool way to animate auto height!
-		var editor_id = "#reply-dialog-" + reply_to;
-		jQuery('html,body').animate({
-			scrollTop: jQuery(editor_id).offset().top - 30
-		});
-		// var el = jQuery(editor_id),
-		// curReplyHeight = el.height(),
-		// autoReplyHeight = el.css('height', 'auto').height();
-		// el.height(curReplyHeight).animate({height: autoReplyHeight}, 1000);
-		//jQuery("#dialog").show().insertAfter(jQuery(replyPost_id).parent());
-		jQuery(editor_id).animate({height:300}, 1000);
-		jQuery("#postTask").val("replyReply");
-		jQuery("#topic_id").val(topic_id);
-		jQuery("#forum_id").val(forum_id);
-		jQuery("#bbp_topic_title").addClass('hidden');
-		jQuery("#bbp_forum_id").addClass('hidden');
-		jQuery(".hide_on_reply").addClass('hidden');
-		//jQuery("#h1_new_message").text("Post Reply");
-		jQuery('.cancelPost').not(this).addClass('replyReply').removeClass('cancelPost btn-warning').text('Reply');
-		tinyNewPostReply(topic_id);
-		task = undefined;
-	})
-
-
-	jQuery.fn.extend({
-			toggleText:function(a,b){
-				if(this.html()==a){this.html(b)}
-				else{this.html(a)}
-		}
+	jQuery("#dialog").height(0);
+	jQuery(this).text('Cancel').addClass("btn-warning cancelPost").removeClass("replyReply");
+	//cool way to animate auto height!
+	var editor_id = "#reply-dialog-" + reply_to;
+	jQuery('html,body').animate({
+		scrollTop: jQuery(editor_id).offset().top - 30
 	});
+	// var el = jQuery(editor_id),
+	// curReplyHeight = el.height(),
+	// autoReplyHeight = el.css('height', 'auto').height();
+	// el.height(curReplyHeight).animate({height: autoReplyHeight}, 1000);
+	//jQuery("#dialog").show().insertAfter(jQuery(replyPost_id).parent());
+	jQuery(editor_id).animate({height:300}, 1000);
+	jQuery("#postTask").val("replyReply");
+	jQuery("#topic_id").val(topic_id);
+	jQuery("#forum_id").val(forum_id);
+	jQuery("#bbp_topic_title").addClass('hidden');
+	jQuery("#bbp_forum_id").addClass('hidden');
+	jQuery(".hide_on_reply").addClass('hidden');
+	//jQuery("#h1_new_message").text("Post Reply");
+	jQuery('.cancelPost').not(this).addClass('replyReply').removeClass('cancelPost btn-warning').text('Reply');
+	tinyNewPostReply(topic_id);
+	task = undefined;
+});
 
-	jQuery(document).ready(function() {
-		jQuery('.more_button').click(function(){
-			if(jQuery(this).prevAll(".threadContent, .replyContent").hasClass("contentLess")) {
-				jQuery(this).prevAll(".threadContent, .replyContent").removeClass("contentLess");
-				jQuery(this).prevAll(".threadContent, .replyContent").addClass("contentMore");
-				jQuery(this).addClass("active");
-				jQuery(this).text("Less");
-			} else {
-				jQuery(this).prevAll(".threadContent, .replyContent").removeClass("contentMore");
-				jQuery(this).prevAll(".threadContent, .replyContent").addClass("contentLess");
-				jQuery(this).removeClass("active");
-				jQuery(this).text("More");
-			}
-			return false;
-		});
 
-		jQuery('.expand-all').click(function(){
-			if(jQuery(".threadContent, .replyContent").hasClass("contentLess")) {
-				jQuery(".threadContent, .replyContent").removeClass("contentLess");
-				jQuery(".threadContent, .replyContent").addClass("contentMore");
-				jQuery(".more_button").addClass("active");
-				jQuery(".more_button").text("Less");
-				jQuery(this).addClass("active");
-				jQuery(this).text("Shrink All");
-			} else {
-				jQuery(".threadContent, .replyContent").removeClass("contentMore");
-				jQuery(".threadContent, .replyContent").addClass("contentLess");
-				jQuery(".more_button").removeClass("active");
-				jQuery(".more_button").text("More");
-				jQuery(this).removeClass("active");
-				jQuery(this).text("Expand All");
-			}
-			return false;
-		});
+// jQuery.fn.extend({
+// 		toggleText:function(a,b){
+// 			if(this.html()==a){this.html(b)}
+// 			else{this.html(a)}
+// 	}
+// });
 
-		jQuery('#expand-replies').click(function(){
-			if(jQuery(".replies").hasClass("show_reply")) {
-					jQuery(".replies").removeClass("show_reply");
-					jQuery(".replies").addClass("hide_reply");
-					jQuery(".show-replies-button").text("Show Replies");
-					jQuery(this).text("Show Replies");
-			} else {
-					jQuery(".replies").removeClass("hide_reply");
-					jQuery(".replies").addClass("show_reply");
-					jQuery(".show-replies-button").text("Hide Replies");
-					jQuery(this).text("Hide Replies");
-			}
-			return false;
-		});
-
-		jQuery('.show-replies-button').click(function(){
-			if(jQuery(this).parent().next(".replies").hasClass("show_reply")) {
-					jQuery(this).parent().next(".replies").removeClass("show_reply");
-					jQuery(this).parent().next(".replies").addClass("hide_reply");
-					jQuery(this).text("Show Replies");
-			} else {
-					jQuery(this).parent().next(".replies").removeClass("hide_reply");
-					jQuery(this).parent().next(".replies").addClass("show_reply");
-					jQuery(this).text("Hide Replies");
-			}
-			return false;
-		});
-	});
-
-	function openThread () {
-		window.open("postlink","_self")
+jQuery('.more_button').click(function(){
+	if(jQuery(this).prevAll(".threadContent, .replyContent").hasClass("contentLess")) {
+		jQuery(this).prevAll(".threadContent, .replyContent").removeClass("contentLess");
+		jQuery(this).prevAll(".threadContent, .replyContent").addClass("contentMore");
+		jQuery(this).addClass("active");
+		jQuery(this).text("Less");
+	} else {
+		jQuery(this).prevAll(".threadContent, .replyContent").removeClass("contentMore");
+		jQuery(this).prevAll(".threadContent, .replyContent").addClass("contentLess");
+		jQuery(this).removeClass("active");
+		jQuery(this).text("More");
 	}
+	return false;
+});
+
+jQuery('.expand-all').click(function(){
+	if(jQuery(".threadContent, .replyContent").hasClass("contentLess")) {
+		jQuery(".threadContent, .replyContent").removeClass("contentLess");
+		jQuery(".threadContent, .replyContent").addClass("contentMore");
+		jQuery(".more_button").addClass("active");
+		jQuery(".more_button").text("Less");
+		jQuery(this).addClass("active");
+		jQuery(this).text("Shrink All");
+	} else {
+		jQuery(".threadContent, .replyContent").removeClass("contentMore");
+		jQuery(".threadContent, .replyContent").addClass("contentLess");
+		jQuery(".more_button").removeClass("active");
+		jQuery(".more_button").text("More");
+		jQuery(this).removeClass("active");
+		jQuery(this).text("Expand All");
+	}
+	return false;
+});
+
+jQuery(document).on('click', '.expand-replies-hide', function(){
+	jQuery(".expand-replies-hide").removeClass("expand-replies-hide").addClass("expand-replies-show");
+	jQuery(".hide-replies-button").click().removeClass("hide-replies-button").addClass("show-replies-button").text("Show Replies");
+	jQuery(this).text("Show Replies");
+});
+
+jQuery(document).on('click', '.expand-replies-show', function(){
+	jQuery(".expand-replies-show").removeClass("expand-replies-show").addClass("expand-replies-hide");
+	jQuery(".show-replies-button").click().removeClass("show-replies-button").addClass("hide-replies-button").text("Hide Replies");
+	jQuery(this).text("Hide Replies");
+});
+
+jQuery(document).on('click', '.show-replies-button', function(){
+	jQuery(this).parent().nextAll(".replies").slideToggle();
+	jQuery(this).text("Hide Replies").removeClass("show-replies-button").addClass("hide-replies-button");
+});
+
+jQuery(document).on('click', '.hide-replies-button', function(){
+	jQuery(this).parent().nextAll(".replies").slideToggle();
+	jQuery(this).text("Show Replies").removeClass("hide-replies-button").addClass("show-replies-button");
+});
+
+function openThread () {
+	window.open("postlink","_self")
+}

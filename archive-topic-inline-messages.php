@@ -313,7 +313,7 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
       	<div class="col-xs-12 clearfix fahk no-pad">
         <div class="col-xs-12 col-md-6 text-left no-pad"> <?php echo '<h1 class="threaded-title">'. get_the_title() .'</h1>'; ?> </div>
         <div class="col-xs-12 col-md-6 text-right no-pad">
-			<button title="Expand or shrink all board replies on this page! Individual topics can be overridden." id="expand-replies" class="btn btn-sm btn-default">Hide Replies</button>
+			<button title="Expand or shrink all board replies on this page! Individual topics can be overridden." id="expand-replies" class="expand-replies-hide btn btn-sm btn-default">Hide All Replies</button>
 			<button title="Expand or shrink all board messages on this page! It is like clicking the more button a billeon times!" class="btn btn-sm btn-default expand-all">Expand All</button>
           <?php if ( is_user_logged_in()) { ?>
           <button id="threaded-new-message" type="button" title="Post a New Message" class="newMessage btn btn-success btn-sm">New Message</button>
@@ -421,7 +421,7 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 			  			<div class="btn-group btn-group-xs threadButtonGroup" role="group" aria-label="..."> -->
 						<button type="button" title="Click to see more/less content" class="more_button btn btn-default btn-xs" id="expandContent_<?php echo $postID; ?>">More</button>
 						<?php if($reply_count > 0) { ?>
-							<button type="button" title="Click to show/hide replies for this topic" alt="This topic is closed to replies" class="show-replies-button btn btn-default btn-xs">Hide Replies</button>
+							<button type="button" title="Click to show/hide replies for this topic" alt="This topic is closed to replies" class="hide-replies-button btn btn-default btn-xs">Hide Replies</button>
 						<?php } ?>
 						<button onclick="window.location='<?php echo $postLink; ?>'" type="button" title="Go to Topic in Forum Area" class="btn btn-default btn-xs">Open</button>
 
@@ -511,7 +511,6 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 							} ?>
 							<button type="button" class="btn btn-default btn-xs"> <?php echo tk_like_buttons (); ?> </button>
 							<button type="button" title="Date" class="btn btn-default btn-xs" disabled="disabled"> <?php echo get_the_date('m/d/y') . ' ' . get_the_time(); ?> </button>
-							Menu order: <?php echo $menu_order; ?>
 		 			</div>
 					<div class="editor"></div>
 

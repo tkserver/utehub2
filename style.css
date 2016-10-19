@@ -12,8 +12,11 @@ Text Domain: wpbootstrap
 */
 
 /* hack class to get rid of bootstrap padding */
-.no-pad {
-    padding: 0!important;
+@media (min-width: 768px) {
+
+     .no-pad {
+         padding: 0!important;
+     }
 }
 /* put space between the cancel and submit buttons */
 .bbp_reply_submit, #newPost_submit{
@@ -63,12 +66,12 @@ textarea.form-control {
     height: 150px;
 }
 
-.show_reply {
+/*.show_reply {
     display: block;
 }
 .hide_reply {
     display: none;
-}
+}*/
 blockquote {
     padding: 10px 20px;
     margin: 0 0 20px;
@@ -1317,15 +1320,15 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 
 @media(max-width:767px) {
 
-.col-md-3 img {
+     .col-md-3 img {
 
-	display: block;
+     	display: block;
 
-	margin-left: auto;
+     	margin-left: auto;
 
-	margin-right: auto;
+     	margin-right: auto;
 
-}
+     }
 
 }
 
@@ -2055,15 +2058,35 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 
 @media(max-width:767px) {
 
-.col-md-3 img {
+     h1.threaded-title {
+          margin-bottom: 5px;
+    }
 
-	display: block;
+     #dialog, .editor {
+         padding-left: 10px;
+         padding-right: 10px;
+    }
 
-	margin-left: auto;
+     #registerContent > div.col-xs-12.clearfix.fahk.no-pad > div.col-xs-12.col-md-6.text-left.no-pad,
+     #registerContent > div.col-xs-12.clearfix.fahk.no-pad > div.col-xs-12.col-md-6.text-right.no-pad {
 
-	margin-right: auto;
+          text-align: center;
 
-}
+     }
+
+     .col-md-3 img {
+
+     	display: block;
+
+     	margin-left: auto;
+
+     	margin-right: auto;
+
+     }
+
+     .fahk {
+         text-align: center;
+     }
 
 }
 
