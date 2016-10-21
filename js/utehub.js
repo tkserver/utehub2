@@ -10,8 +10,12 @@ jQuery(document).ready(function(){
 	    var task = this.getAttribute('data-task');
 	    var user_id = this.getAttribute('data-user-id');
 	    var reply_id = this.getAttribute('data-reply-id');
+         var base_url = window.location;
+          // production
+          //var editor_url = "http://www.utehub.com/wp-content/themes/utehub25/dialog-reply.php?replyPost_id=" + replyPost_id
 
-	    var editor_url = "http://localhost:8888/utehub.com/wp-content/themes/utehub2/dialog-reply.php?replyPost_id=" + replyPost_id
+          // development
+          var editor_url = base_url + "/wp-content/themes/utehub2/dialog-reply.php?replyPost_id=" + replyPost_id
 	    					+ "&topic_id=" + topic_id
 						+ "&forum_id=" + forum_id
 						+ "&user_id=" + user_id
@@ -114,7 +118,8 @@ jQuery(document).on('click', '#threaded-new-message-cancel', function() {
 
 // NEW TOPIC
 jQuery(document).on('click', '#threaded-new-message', function() {
-	jQuery("#dialog").animate({height:400}, 1000);
+     jQuery(".cancel").click();
+	jQuery("#dialog").animate({height:530}, 1000);
 	jQuery("#postTask").val("newPost");
 	jQuery("#bbp_topic_title").removeClass('hidden');
 	jQuery("#bbp_forum_id").removeClass('hidden');

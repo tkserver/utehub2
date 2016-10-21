@@ -14,12 +14,19 @@
 
  */
 
- add_filter( 'bbp_verify_nonce_request_url', 'my_bbp_verify_nonce_request_url', 999, 1 );
-function my_bbp_verify_nonce_request_url( $requested_url )
-{
-    return 'http://localhost:8888' . $_SERVER['REQUEST_URI'];
-}
+// check and see if we are on localhost for the bbpress bug below
+$server = $_SERVER['SERVER_NAME'];
 
+//error_log($server);
+if($server == "localhost"){
+     //this gets rid of the "are you sure you want to do that?" bug in bbpress on local dev environment, but we don't want it to run on productions
+     add_filter( 'bbp_verify_nonce_request_url', 'my_bbp_verify_nonce_request_url', 999, 1 );
+          function my_bbp_verify_nonce_request_url( $requested_url )
+     {
+         return 'http://localhost:8888' . $_SERVER['REQUEST_URI'];
+     }
+     //error_log("The localhost hack for bbpress is running");
+}
 
 function add_jquery_effects_core_js() {
     wp_enqueue_script( 'jquery-effects-core' );
@@ -27,10 +34,10 @@ function add_jquery_effects_core_js() {
 add_action( 'wp_enqueue_scripts', 'add_jquery_effects_core_js' );
 
 
- function add_jquerydialog_js() {
-     wp_enqueue_script( 'jquery-ui-dialog' );
- }
- add_action( 'wp_enqueue_scripts', 'add_jquerydialog_js' );
+// function add_jquerydialog_js() {
+//      wp_enqueue_script( 'jquery-ui-dialog' );
+//  }
+//  add_action( 'wp_enqueue_scripts', 'add_jquerydialog_js' );
 
 /* add tinymce to the theme  */
 function tk_tinymce() {
@@ -41,10 +48,10 @@ add_action( 'wp_enqueue_scripts', 'tk_tinymce' );
 
 function utehubjs() {
     wp_enqueue_style( 'style-utehubjs', get_stylesheet_uri() );
-    wp_enqueue_script( 'script-utehubjs', get_template_directory_uri() . '/js/utehub.js', array(), '1.0.0', true );
+    wp_enqueue_script( 'script-utehubjs', get_template_directory_uri() . '/js/utehub.js', array('jquery'), '1.0.0', true );
+    wp_enqueue_script( 'bootstrapjs', get_template_directory_uri() . '/js/bootstrap.min.js', array('jquery'), '3.0.0', true );
 }
 add_action( 'wp_enqueue_scripts', 'utehubjs' );
-
 
 
  /**
@@ -643,26 +650,33 @@ add_action( 'widgets_init', 'textdomain_register_sidebars' );
 
 
 // allows shortcodes to be put in widgets, hopefuly
-
 add_filter('widget_text', 'do_shortcode');
 
 
 
+function utehub_load_css() {
+
+
+	// Load our custom version of Bootsrap CSS. Can easily override in a child theme.
+	wp_register_style('bootstrap', get_template_directory_uri() . '/css/bootstrap.min.css', array(), '3.0.0', 'all' );
+	wp_enqueue_style( 'bootstrap');
+
+     wp_register_style('style', get_stylesheet_directory_uri() . '/style.css', array() ,'2.5');
+     wp_enqueue_style( 'style');
+
+}
+add_action( 'wp_enqueue_scripts', 'utehub_load_css' );
 
 
 function cwd_wp_bootstrap_scripts_styles() {
 
   // Loads Bootstrap minified JavaScript file.
-
-  wp_enqueue_script('bootstrapjs', '//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js', array('jquery'),'3.0.0', true );
+  //wp_enqueue_script('bootstrapjs', '//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js', array('jquery'),'3.0.0', true );
 
   // Loads Bootstrap minified CSS file.
-
-  wp_enqueue_style('bootstrapwp', '//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css', false ,'3.0.0');
+  //wp_enqueue_style('bootstrapwp', '//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css', false ,'3.0.0');
 
   // Loads our main stylesheet.
-
-  wp_enqueue_style('style', get_stylesheet_directory_uri() . '/style.css', array('bootstrapwp') ,'1.0');
 
 }
 
