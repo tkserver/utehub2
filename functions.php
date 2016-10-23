@@ -14,6 +14,15 @@
 
  */
 
+// function add_my_js_files(){
+//      wp_enqueue_script('jquery-validate-min',
+//                        get_stylesheet_directory_uri() . '/js/jquery.validate.min.js',
+//                        array( 'jquery' )
+//                       );
+//  }
+//  add_action('wp_enqueue_scripts', "add_my_js_files");
+
+
 // check and see if we are on localhost for the bbpress bug below
 $server = $_SERVER['SERVER_NAME'];
 

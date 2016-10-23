@@ -127,9 +127,25 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 		'comment_status' => 'closed',
 		'menu_order'     => 0
 		 );
-
+		 //error_log($post_content);
 	// Insert topic
 	$topic_id   = wp_insert_post( $topic_data );
+
+// 	$prefix = $wpdb->prefix;
+// 	$wpdb->insert(
+// 	$prefix. 'posts',
+// 	$topic_data,
+// 	array(
+// 		'%d',
+// 		'%s',
+// 		'%s',
+// 		'%d',
+// 		'%s',
+// 		'%s',
+// 		'%s',
+// 		'%d'
+// 	)
+// );
 
 	// Bail if no topic was added
 	if ( empty( $topic_id ) )
@@ -305,6 +321,7 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 }
 	?>
 <div class="container">
+
   <div class="row mobileContent browserContent">
     <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 well well-sm" id="registerContent">
       	<?php if ( is_active_sidebar( 'sidebar-8' ) ) : ?>
@@ -316,9 +333,9 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 			<button title="Expand or shrink all board replies on this page! Individual topics can be overridden." id="expand-replies" class="expand-replies-hide btn btn-sm btn-default">Hide All Replies</button>
 			<button title="Expand or shrink all board messages on this page! It is like clicking the more button a billeon times!" class="btn btn-sm btn-default expand-all">Expand All</button>
           <?php if ( is_user_logged_in()) { ?>
-          <button id="threaded-new-message" type="button" title="Post a New Message" class="newMessage btn btn-success btn-sm">New Message</button>
+          	<button id="threaded-new-message" type="button" title="Post a New Message" class="newMessage btn btn-success btn-sm">New Message</button>
           <?php } else { ?>
-          <button id="threaded-new-message-disabled" onclick="lognToReply()" type="button" title="Login to post a message..." class="newMessage-disabled btn-sm btn btn-success">New Message</button>
+          	<button id="threaded-new-message-disabled" onclick="lognToReply()" type="button" title="Login to post a message..." class="newMessage-disabled btn-sm btn btn-success">New Message</button>
           <?php	 } ?>
         </div>
       </div>
@@ -327,6 +344,8 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 
 	<?php get_the_content(); ?>
 
+	<?php  if (is_user_logged_in() > 0) { ?>
+
 		<div id="dialog" title="New Message">
 		    <form id="reply-post" name="new-post" method="post" action="<?php echo $_SERVER["REQUEST_URI"] ?>">
 				<div class="submit-header col-xs-12 no-pad">
@@ -334,7 +353,7 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 						<h1 id="h1_new_message" class="pull-left">Post New Message</h1>
 					</div>
 					<div class="col-xs-6 no-pad">
-						<button type="submit" id="newPost_submit" name="bbp_reply_submit" class="btn btn-sm btn-default btn-success pull-right ">Submit</button>
+						<button type="submit" id="newPost_submit" name="bbp_reply_submit" class="btn btn-sm btn-default btn-success pull-right" disabled="disabled">Submit</button>
 						<button type="button" class="btn btn-default btn-warning btn-sm pull-right" onclick="cancelNewPost()">Cancel</button>
 					</div>
 				</div>
@@ -366,6 +385,7 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 		      </form>
 		</div>
 	<?php
+	} // end if user is logged in
 	//Protect against arbitrary paged values
 	$paged = ( get_query_var( 'page' ) ) ? absint( get_query_var( 'page' ) ) : 1;
 
@@ -388,6 +408,10 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 	if( $loop->have_posts() ):
 
 		while( $loop->have_posts() ): $loop->the_post(); global $post;
+
+
+
+			$the_content = apply_filters('the_content', get_the_content());
 			$parentID = get_the_ID();
 			$topicLink = get_page_link();
 			$parent = get_the_ID();
@@ -405,6 +429,9 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 			$forum_link = get_permalink($forum_id);
 			$post_status = get_post_status();
 
+			// if(isset($GLOBALS['wp_embed']))
+			// $content = $GLOBALS['wp_embed']->autoembed($the_content);
+
 			$reply_count = $wpdb->get_var("SELECT COUNT(ID) FROM ".$wpdb->prefix."posts WHERE post_type = 'reply' AND post_parent = '$topic_id' AND post_status = 'publish'");
 			//echo 'reply count ' . $reply_count;
 
@@ -415,7 +442,7 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 						echo '<div class="threadAuthor">' . '<a href="' . bp_core_get_user_domain($author) . '">' . get_the_author() . '</a></div>';
 						echo '<div class="threadTopic">' . get_the_title() . '</div>';
 					echo '</div>';
-					echo '<div class="threadContent contentLess" id="threadContent_' . $postID . '">' . get_the_content() . '</div>';
+					echo '<div class="threadContent contentLess" id="threadContent_' . $postID . '">' . $the_content . '</div>';
 					?>
 						<!-- <div class="threadFooter">
 			  			<div class="btn-group btn-group-xs threadButtonGroup" role="group" aria-label="..."> -->
@@ -473,7 +500,7 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 			echo '<div class="replies show_reply">';
 
 				while( $loopReply->have_posts() ): $loopReply->the_post(); global $post;
-					$reply = get_the_content();
+					$reply = apply_filters('the_content', get_the_content());
 					$author = get_the_author_meta ();
 					$replyLink = get_permalink();
 					$replyID = get_the_ID();
@@ -482,11 +509,14 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 					$topic_id = get_post_meta( get_the_ID($replyID), '_bbp_topic_id', true);
 					$menu_order = $post->menu_order;
 
+					// if(isset($GLOBALS['wp_embed']))
+    	// 				$content = $GLOBALS['wp_embed']->autoembed($reply);
+
 
 					echo '<div class="replyContainer show_reply">';
 						echo '<div class="threadAvatar">' . get_avatar( get_the_author_meta( 'ID' ), 16 ) . '</div>';
 						echo '<div class="threadAuthor">' . '<a href="' . bp_core_get_user_domain($author) . '">' . get_the_author() . '</a></div>';
-						echo '<div class="replyContent contentLess" id="threadContent_' . $replyID . '">' . get_the_content() . '</div>';
+						echo '<div class="replyContent contentLess" id="threadContent_' . $replyID . '">' . $reply . '</div>';
 							?>
 							<button type="button" title="Click to see more/less content" alt="This topic is closed to replies" class="more_button btn btn-default btn-xs" id="expandContent_<?php echo $postID; ?>">More</button>
 							<button onclick="window.location='<?php echo $postLink . '/#post-' . $replyID; ?>'" type="button" title="Go to Reply in Forum Area - Videos, Twitter, various media may work better in the main forum" class="btn btn-default btn-xs">Open</button>
@@ -520,7 +550,6 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 		<?php endwhile; ?>
 
 	<?php endif; ?>
-	?>
 
     <div class="col-sm-12 text-center">
 		<?php

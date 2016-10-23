@@ -4,6 +4,18 @@ task = "";
 jQuery(document).ready(function(){
 
 
+     jQuery(function(){
+                 jQuery('#dialog').on('keyup change', function(){
+                     if (jQuery('#bbp_forum_id').val() == '' ||
+                         jQuery('#bbp_topic_title').val() == '') {
+                             jQuery('#newPost_submit').prop('disabled', true);
+                     } else {
+                             jQuery('#newPost_submit').prop('disabled', false);
+                     }
+                 });
+         });
+
+
     jQuery(document).on('click', ".comment", function() {
 
 	    var nonce = this.getAttribute('data-nonce');
@@ -52,8 +64,8 @@ function tinyNewPost() {
 			skin: "lightgray",
 			menubar : false,
 			statusbar : false,
-			toolbar: [ "bold italic forecolor blockquote link image media preview fullscreen "],
-			plugins : "link image fullscreen media preview autolink textcolor", // plugins folder in wp-includes/tinymce
+			toolbar: [ "bold italic forecolor blockquote link image preview fullscreen "],
+			plugins : "link image fullscreen preview textcolor", // plugins folder in wp-includes/tinymce
 			paste_auto_cleanup_on_paste : true,
 			paste_postprocess : function( pl, o ) {
 				o.node.innerHTML = o.node.innerHTML.replace( /&nbsp;+/ig, " " );
@@ -70,8 +82,8 @@ function tinyNewPostReply(topic_id) {
 			skin: "lightgray",
 			menubar : false,
 			statusbar : false,
-			toolbar: [ "bold italic forecolor blockquote link image media preview fullscreen "],
-			plugins : "link image fullscreen media preview autolink textcolor", // plugins folder in wp-includes/tinymce
+			toolbar: [ "bold italic forecolor blockquote link image preview fullscreen "],
+			plugins : "link image fullscreen preview textcolor", // plugins folder in wp-includes/tinymce
 			paste_auto_cleanup_on_paste : true,
 			paste_postprocess : function( pl, o ) {
 				o.node.innerHTML = o.node.innerHTML.replace( /&nbsp;+/ig, " " );

@@ -41,8 +41,8 @@ $editor_id = generateRandomString();
 	        skin: "lightgray",
 	        menubar : false,
 	        statusbar : false,
-	        toolbar: [ "bold italic forecolor blockquote link image media preview fullscreen "],
-	        plugins : "link image fullscreen media preview autolink textcolor", // plugins folder in wp-includes/tinymce
+	        toolbar: [ "bold italic forecolor blockquote link image preview fullscreen "],
+	        plugins : "link image fullscreen preview textcolor", // plugins folder in wp-includes/tinymce
 	        paste_auto_cleanup_on_paste : true,
 	        paste_postprocess : function( pl, o ) {
 	            o.node.innerHTML = o.node.innerHTML.replace( /&nbsp;+/ig, " " );
