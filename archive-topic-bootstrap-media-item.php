@@ -1,6 +1,6 @@
 <?php
 /**
- * Template Name: Threaded-View-Inline-Messages
+ * Template Name: Threaded-View-Bootstrap-Media-Item
  * Description: Used as a page template to show page contents, followed by a loop through a topics archive
  */
  // Gets header.php
@@ -321,147 +321,137 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 }
 	?>
 <div class="container">
+	<div class="row mobileContent browserContent">
+	    	<div class="col-md-9 well well-sm" id="registerContent">
 
-  <div class="row mobileContent browserContent">
-    <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 well well-sm" id="registerContent">
-      	<?php if ( is_active_sidebar( 'sidebar-8' ) ) : ?>
-      		<?php dynamic_sidebar( 'sidebar-8' ); ?>
-      	<?php endif; ?>
-      	<div class="col-xs-12 clearfix fahk no-pad">
-        <div class="col-xs-12 col-md-6 text-left no-pad"> <?php echo '<h1 class="threaded-title">'. get_the_title() .'</h1>'; ?> </div>
-        <div class="col-xs-12 col-md-6 text-right no-pad">
-			<button title="Expand or shrink all board replies on this page! Individual topics can be overridden." id="expand-replies" class="expand-replies-hide btn btn-sm btn-default">Hide All Replies</button>
-			<button title="Expand or shrink all board messages on this page! It is like clicking the more button a billeon times!" class="btn btn-sm btn-default expand-all">Expand All</button>
-          <?php if ( is_user_logged_in()) { ?>
-          	<button id="threaded-new-message" type="button" title="Post a New Message" class="newMessage btn btn-success btn-sm">New Message</button>
-          <?php } else { ?>
-          	<button id="threaded-new-message-disabled" onclick="lognToReply()" type="button" title="Login to post a message..." class="newMessage-disabled btn-sm btn btn-success">New Message</button>
-          <?php	 } ?>
-        </div>
-      </div>
+	      	<?php if ( is_active_sidebar( 'sidebar-8' ) ) : ?>
+	      		<?php dynamic_sidebar( 'sidebar-8' ); ?>
+	      	<?php endif; ?>
+	      	<div class="col-xs-12 clearfix fahk no-pad">
+	        		<div class="col-xs-12 col-md-6 text-left no-pad"> <?php echo '<h1 class="threaded-title">'. get_the_title() .'</h1>'; ?> </div>
+			        	<div class="col-xs-12 col-md-6 text-right no-pad">
+						<button title="Expand or shrink all board replies on this page! Individual topics can be overridden." id="expand-replies" class="expand-replies-hide btn btn-sm btn-default">Hide All Replies</button>
+						<button title="Expand or shrink all board messages on this page! It is like clicking the more button a billeon times!" class="btn btn-sm btn-default expand-all">Expand All</button>
+			          	<?php if ( is_user_logged_in()) { ?>
+			          	<button id="threaded-new-message" type="button" title="Post a New Message" class="newMessage btn btn-success btn-sm">New Message</button>
+			          	<?php } else { ?>
+			          	<button id="threaded-new-message-disabled" onclick="lognToReply()" type="button" title="Login to post a message..." class="newMessage-disabled btn-sm btn btn-success">New Message</button>
+			          	<?php	 } ?>
+			        	</div>
+	      	</div>
 
-	<div class="page hentry entry">
+		<div class="page hentry entry">
 
-	<?php get_the_content(); ?>
+			<?php get_the_content(); ?>
 
-	<?php  if (is_user_logged_in() > 0) { ?>
+			<?php  if (is_user_logged_in() > 0) { ?>
 
-		<div id="dialog" title="New Message">
-		    <form id="reply-post" name="new-post" method="post" action="<?php echo $_SERVER["REQUEST_URI"] ?>">
-				<div class="submit-header col-xs-12 no-pad">
-					<div class="col-xs-6 no-pad">
-						<h1 id="h1_new_message" class="pull-left">Post New Message</h1>
+			<div id="dialog" title="New Message">
+			    <form id="reply-post" name="new-post" method="post" action="<?php echo $_SERVER["REQUEST_URI"] ?>">
+					<div class="submit-header col-xs-12 no-pad">
+						<div class="col-xs-6 no-pad">
+							<h1 id="h1_new_message" class="pull-left">Post New Message</h1>
+						</div>
+						<div class="col-xs-6 no-pad">
+							<button type="submit" id="newPost_submit" name="bbp_reply_submit" class="btn btn-sm btn-default btn-success pull-right" disabled="disabled">Submit</button>
+							<button type="button" class="btn btn-default btn-warning btn-sm pull-right" onclick="cancelNewPost()">Cancel</button>
+						</div>
 					</div>
-					<div class="col-xs-6 no-pad">
-						<button type="submit" id="newPost_submit" name="bbp_reply_submit" class="btn btn-sm btn-default btn-success pull-right" disabled="disabled">Submit</button>
-						<button type="button" class="btn btn-default btn-warning btn-sm pull-right" onclick="cancelNewPost()">Cancel</button>
-					</div>
-				</div>
-		          <label class="hide_on_reply" for="bbp_topic_title"><?php printf( __( 'Topic Title (Maximum Length: %d):', 'bbpress' ), bbp_get_title_max_length() ); ?></label>
-		          <br />
-		          <input class="form-control" type="text" id="bbp_topic_title" value="<?php bbp_form_topic_title(); ?>" tabindex="<?php bbp_tab_index(); ?>" size="50" name="post_title" maxlength="<?php bbp_title_max_length(); ?>" />
-		          <p class="hide_on_reply">
-		        	<label class="hide_on_reply" for="bbp_forum_id">
-		            	<?php _e( 'Forum:', 'bbpress' ); ?>
-		            </label>
-		            <br />
-		            <?php
-		            	bbp_dropdown( array(
-			                	'show_none' => __( '(No Forum)', 'bbpress' ),
-			                   	'selected'  => bbp_get_form_topic_forum()
-		                	)
-						);
-		        	?>
-		          </p>
-		        <!-- forum select list) -->
-				<textarea id="post_content" name="post_content"></textarea>
+			          <label class="hide_on_reply" for="bbp_topic_title"><?php printf( __( 'Topic Title (Maximum Length: %d):', 'bbpress' ), bbp_get_title_max_length() ); ?></label>
+			          <br />
+			          <input class="form-control" type="text" id="bbp_topic_title" value="<?php bbp_form_topic_title(); ?>" tabindex="<?php bbp_tab_index(); ?>" size="50" name="post_title" maxlength="<?php bbp_title_max_length(); ?>" />
+			          <p class="hide_on_reply">
+			        	<label class="hide_on_reply" for="bbp_forum_id">
+			            	<?php _e( 'Forum:', 'bbpress' ); ?>
+			            </label>
+			            <br />
+			            <?php
+			            	bbp_dropdown( array(
+				                	'show_none' => __( '(No Forum)', 'bbpress' ),
+				                   	'selected'  => bbp_get_form_topic_forum()
+			                	)
+							);
+			        	?>
+			          </p>
+			        <!-- forum select list) -->
+					<textarea id="post_content" name="post_content"></textarea>
 
-		        <input type="hidden" name="topic_id" id="topic_id" value="<?php if(isset($topic_id)){echo $topic_id;} ?>">
-		        <input type="hidden" name="post_parent" id="post_parent" value="<?php if(isset($parentID)){echo $parentID;} ?>">
-		        <input type="hidden" name="bbp_reply_to" id="bbp_reply_to" value="">
-		        <input type="hidden" name="post_author" id="post_author" value="<?php $post_author = get_current_user_id(); echo $post_author; ?>">
-		        <input type="hidden" name="task" id="postTask" value="newPost">
-		        <?php wp_nonce_field('tk_forum_message'); ?>
-		      </form>
-		</div>
-	<?php
-	} // end if user is logged in
-	//Protect against arbitrary paged values
-	$paged = ( get_query_var( 'page' ) ) ? absint( get_query_var( 'page' ) ) : 1;
+			        <input type="hidden" name="topic_id" id="topic_id" value="<?php if(isset($topic_id)){echo $topic_id;} ?>">
+			        <input type="hidden" name="post_parent" id="post_parent" value="<?php if(isset($parentID)){echo $parentID;} ?>">
+			        <input type="hidden" name="bbp_reply_to" id="bbp_reply_to" value="">
+			        <input type="hidden" name="post_author" id="post_author" value="<?php $post_author = get_current_user_id(); echo $post_author; ?>">
+			        <input type="hidden" name="task" id="postTask" value="newPost">
+			        <?php wp_nonce_field('tk_forum_message'); ?>
+			      </form>
+			</div>
+			<?php
+			} // end if user is logged in
+			//Protect against arbitrary paged values
+			$paged = ( get_query_var( 'page' ) ) ? absint( get_query_var( 'page' ) ) : 1;
 
-  if ($th > 0){
-    $args = array(
-	    'p' => $th,
-	    'post_type' => 'topic'
-    );
-  } else {
-		$args = array(
-		'post_type' => 'topic', // enter your custom post type
-		'orderby' => 'date',
-		'order' => 'DESC',
-		'posts_per_page' => 10,
-		'paged' => $paged
-	);
-  }
-	$loop = new WP_Query( $args );
+			  if ($th > 0){
+			    $args = array(
+				    'p' => $th,
+				    'post_type' => 'topic'
+			    );
+			  } else {
+					$args = array(
+					'post_type' => 'topic', // enter your custom post type
+					'orderby' => 'date',
+					'order' => 'DESC',
+					'posts_per_page' => 10,
+					'paged' => $paged
+				);
+			  }
+			$loop = new WP_Query( $args );
 
-	if( $loop->have_posts() ):
+			if( $loop->have_posts() ):
 
-		while( $loop->have_posts() ): $loop->the_post(); global $post;
+			while( $loop->have_posts() ): $loop->the_post(); global $post;
 
-			$the_content = apply_filters('the_content', get_the_content());
-			$parentID = get_the_ID();
-			$topicLink = get_page_link();
-			$parent = get_the_ID();
-			$parent_title = get_the_title($parent);
-			$grandparent_title = get_the_title();
-			$author = get_the_author_meta( 'ID' );
-			$postLink = get_permalink();
-			$categoryLink = get_permalink($parentID);
-			$postID = get_the_ID();
-			$menu_order = $post->menu_order;
-			$forum_id = get_post_meta( get_the_ID(), '_bbp_forum_id', true);
-			$topic_id = get_post_meta( get_the_ID(), '_bbp_topic_id', true);
-	          $thread_url =  get_site_url() . '?th='.$parentID;
-			$forum_title = get_the_title($forum_id);
-			$forum_link = get_permalink($forum_id);
-			$post_status = get_post_status();
+				$the_content = apply_filters('the_content', get_the_content());
+				$parentID = get_the_ID();
+				$topicLink = get_page_link();
+				$parent = get_the_ID();
+				$parent_title = get_the_title($parent);
+				$grandparent_title = get_the_title();
+				$author = get_the_author_meta( 'ID' );
+				$postLink = get_permalink();
+				$categoryLink = get_permalink($parentID);
+				$postID = get_the_ID();
+				$menu_order = $post->menu_order;
+				$forum_id = get_post_meta( get_the_ID(), '_bbp_forum_id', true);
+				$topic_id = get_post_meta( get_the_ID(), '_bbp_topic_id', true);
+		          $thread_url =  get_site_url() . '?th='.$parentID;
+				$forum_title = get_the_title($forum_id);
+				$forum_link = get_permalink($forum_id);
+				$post_status = get_post_status();
 
-			$avatar = get_avatar( get_the_author_meta( 'ID' ), 40 );
+				$avatar = get_avatar( get_the_author_meta( 'ID' ), 42 );
 
-			$timestamp = get_the_time('U');
-			$time = calc_time_diff($timestamp, NULL, TRUE);
-			// if (strpos($avatar, 'gravatar') !== false) {
-			//     $avatar = '<img src="' . get_site_url() . '/wp-content/uploads/2016/08/UTAH.png" width="16" height="16">';
-			// }
+				$timestamp = get_post_time('U', true);
+				//echo $timestamp;
+				$time = calc_time_diff($timestamp, NULL, TRUE);
+				// if (strpos($avatar, 'gravatar') !== false) {
+				//     $avatar = '<img src="' . get_site_url() . '/wp-content/uploads/2016/08/UTAH.png" width="16" height="16">';
+				// }
 
-			$reply_count = $wpdb->get_var("SELECT COUNT(ID) FROM ".$wpdb->prefix."posts WHERE post_type = 'reply' AND post_parent = '$topic_id' AND post_status = 'publish'");
-			//echo 'reply count ' . $reply_count;
-			?>
-			<div class="well well-sm threadWell">
-				<div class="topicContainer">
-						<!-- <div class="threadContainer"> -->
-							<div class="threadHeader">
-								<div class="threadAvatar"><?php echo $avatar; ?></div>
-
-								<div class="threadAuthor"><a href="<?php echo bp_core_get_user_domain($author); ?>"><?php echo get_the_author(); ?></a>
-									<span class="postInfo"><a href="<?php echo $forum_link; ?>"><?php echo $forum_title; ?></a>
-									 &nbsp;&nbsp;<?php echo $time ?></span>
-								</div>
-
-								<div class="pull-right"><?php echo tk_like_buttons(); ?> </div>
-							</div>
-							<div class="threadTopic"><?php echo get_the_title(); ?>
-
-
-							</div>
-							<div class="threadContent contentLess" id="threadContent_' . $postID . '"><?php echo $the_content; ?></div>
-							<button type="button" title="Click to see more/less content" class="more_button footer_button" id="expandContent_<?php echo $postID; ?>">More</button>
-								<?php if($reply_count > 0) { ?>
-									<button type="button" title="Click to show/hide replies for this topic" alt="This topic is closed to replies" class="hide-replies-button footer_button">Hide Replies</button>
-								<?php } ?>
-								<button onclick="window.location='<?php echo $postLink; ?>'" type="button" title="Go to Topic in Forum Area" class="footer_button">Open</button>
-
+				$reply_count = $wpdb->get_var("SELECT COUNT(ID) FROM ".$wpdb->prefix."posts WHERE post_type = 'reply' AND post_parent = '$topic_id' AND post_status = 'publish'");
+				//echo 'reply count ' . $reply_count;
+				?>
+		<div class="well well-sm threadWell">
+			<div class="media topicContainer">
+				<div class="media-left pull-left"> <a href="#"><?php echo $avatar; ?></a></div>
+					<div class="media-body">
+						<div class="media-heading"><a href="<?php echo bp_core_get_user_domain($author); ?>"><?php echo get_the_author(); ?></a>
+							<span class="postInfo"><a href="<?php echo $forum_link; ?>"><?php echo $forum_title; ?></a>
+							 &nbsp;&nbsp;<?php echo $time ?></span>
+							 <div class="pull-right"><?php echo tk_like_buttons(); ?> </div>
+						</div>
+						<h4 class="media-heading"><?php echo get_the_title(); ?></h4>
+						<div class="threadContent contentLess" id="threadContent_<?php echo $postID; ?>"><?php echo $the_content; ?></div>
+						<!-- <div class="media-heading"> -->
+							<button type="button" title="Click to see more/less content" class="more_button footer_button" id="expandContent_<?php echo $postID; ?>">More </button>
 								<?php if ($post_status == 'closed'){ ?>
 										<button type="button" class="footer_button disabled" title="Topic Closed">Topic Closed</button>
 									<?php } else {
@@ -480,34 +470,30 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 										<button onclick="lognToReply()" type="button" title="" class="footer_button">Reply</button>
 									<?php }
 								} ?>
-
+								<?php if($reply_count > 0) { ?>
+									<button type="button" title="Click to show/hide replies for this topic" alt="This topic is closed to replies" class="hide-replies-button footer_button">Hide Replies</button>
+								<?php } ?>
+								<button onclick="window.location='<?php echo $postLink; ?>'" type="button" title="Go to Topic in Forum Area" class="footer_button">Open</button>
 								<button type="button" title="Share this topic on Twitter or Facebook" class="footer_button">
 								  <a href="http://twitter.com/share?text=<?php echo get_the_title(); ?>&via=Ute_Hub&hashtags=GoUtes&url=<?php echo $thread_url; ?>" target="_blank"><i class="twitter"></i></a> </button>
 
 								 <button type="button" title="Share this topic on Twitter or Facebook" class="footer_button"> <a href="https://facebook.com/sharer.php?u=<?php echo $thread_url; ?>" target="_blank"><i class="facebook"></i></a></button>
-								<!-- </div>
-								</div> -->
-
 						<!-- </div> -->
+					</div>
+					<div class="editor"></div>
+				</div>
 
+				<?php
+				$args = array(
+					'post_type' 		=> 'reply', // enter your custom post type
+					'posts_per_page'    => '50',
+					'orderby' 		=> 'menu_order',
+					'order' 			=> 'ASC',
+					'post_parent' 		=> $topic_id,
+				);
+				$loopReply = new WP_Query( $args );
 
-				</div> <!-- topic container -->
-				<div class="editor"></div>
-
-<?php
-			$args = array(
-				'post_type' 		=> 'reply', // enter your custom post type
-				'posts_per_page'    => '50',
-				'orderby' 		=> 'menu_order',
-				'order' 			=> 'ASC',
-				'post_parent' 		=> $topic_id,
-			);
-			$loopReply = new WP_Query( $args );
-
-////////  REPLY LOOP /////////////////////////////////////////////////////////
-
-
-			echo '<div class="replies show_reply">';
+				////////  REPLY LOOP /////////////////////////////////////////////////////////
 
 				while( $loopReply->have_posts() ): $loopReply->the_post(); global $post;
 					$reply = apply_filters('the_content', get_the_content());
@@ -518,27 +504,25 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 					$forum_id = get_post_meta( get_the_ID($replyID), '_bbp_forum_id', true);
 					$topic_id = get_post_meta( get_the_ID($replyID), '_bbp_topic_id', true);
 					$menu_order = $post->menu_order;
-					$avatar = get_avatar( get_the_author_meta( 'ID' ), 40 );
-					$timestamp = get_the_time('U');
+					$avatar = get_avatar( get_the_author_meta( 'ID' ), 42 );
+					$timestamp = get_post_time('U', true);
 					$time = calc_time_diff($timestamp, NULL, TRUE);
 
 					?>
-
+				<div class="replies show_reply">
 					<div class="replyContainer show_reply">
-						<div class="threadHeader">
-							<div class="replyAvatar"><?php echo $avatar; ?></div>
-							<div class="pull-right reply_like_buttons"><?php echo tk_like_buttons(); ?> </div>
-							<div class="replyAuthor"><a href="<?php echo bp_core_get_user_domain($author); ?>"><?php echo get_the_author(); ?></a>
-								<span class="postInfo"><?php echo $time ?></span>
+						<div class="media-left pull-left"> <a href="#"><?php echo $avatar; ?></a></div>
+						<div class="media-body">
+							<div class="media-heading"><a href="<?php echo bp_core_get_user_domain($author); ?>"><?php echo get_the_author(); ?></a>
+								<span class="postInfo"><a href="<?php echo $forum_link; ?>"><?php echo $forum_title; ?></a>
+								 &nbsp;&nbsp;<?php echo $time ?></span>
+								 <div class="pull-right"><?php echo tk_like_buttons(); ?> </div>
 							</div>
-
-						</div>
-
-					<div class="replyContent contentLess" id="threadContent_<?php echo $replyID; ?>"><?php echo $reply; ?></div>
+							<div class="replyContent contentLess" id="threadContent_<?php echo $replyID; ?>"><?php echo $reply; ?></div>
 							<button type="button" title="Click to see more/less content" alt="This topic is closed to replies" class="more_button footer_button reply_more_button" id="expandContent_<?php echo $postID; ?>">More</button>
-							<button onclick="window.location='<?php echo $postLink . '/#post-' . $replyID; ?>'" type="button" title="Go to Reply in Forum Area - Videos, Twitter, various media may work better in the main forum" class="footer_button">Open</button>
 
-							<?php if ($post_status == 'closed'){ ?>
+
+								<?php if ($post_status == 'closed'){ ?>
 									<button type="button" class="footer_button disabled" title="Topic Closed">Topic Closed</button>
 								<?php } else {
 									if ( is_user_logged_in()) { ?>
@@ -556,58 +540,60 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 										<button onclick="lognToReply()" type="button" title="" class="footer_button">Reply</button>
 									<?php }
 							} ?>
-		 			</div>
-					<div class="editor"></div>
-
-				<?php endwhile; ?>
-		  		</div>
+							<button onclick="window.location='<?php echo $postLink . '/#post-' . $replyID; ?>'" type="button" title="Go to Reply in Forum Area" class="footer_button">Open</button>
+		 				</div>
+						<div class="editor"></div>
+					</div>
 				</div>
-		<?php endwhile; ?>
 
-	<?php endif; ?>
+			<?php endwhile; ?> <!-- ends the while there is a reply loop -->
+		</div> <!-- well threadwell -->
 
-    <div class="col-sm-12 text-center">
-		<?php
+			<?php endwhile; ?> <!-- ends the while there is a post loop -->
+		<?php endif; ?>
 
-      		$big = 999999999; // need an unlikely integer
-		    $pages = paginate_links( array(
-				'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
-		        'format' => '?paged=%#%',
-		        'current' => max( 1, get_query_var('page') ),
-		        'total' => $loop->max_num_pages,
-		        'type'  => 'array',
-		      	)
-			);
+		    	<div class="col-sm-12 text-center">
+				<?php
 
-      		/* below adds bootstrap styling to the paginated links.  Cool beans */
-        	if( is_array( $pages ) ) {
-         		$paged = ( get_query_var('page') == 0 ) ? 1 : get_query_var('page');
-         		echo '<div class="pagination-wrap"><ul class="pagination">';
-         		foreach ( $pages as $page ) {
-           			echo "<li>$page</li>";
-            	}
-            	echo '</ul></div>';
-            }
+		      		$big = 999999999; // need an unlikely integer
+				    $pages = paginate_links( array(
+						'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+				        'format' => '?paged=%#%',
+				        'current' => max( 1, get_query_var('page') ),
+				        'total' => $loop->max_num_pages,
+				        'type'  => 'array',
+				      	)
+					);
 
-	// Outro Text (hard coded)
-	echo '</div><!-- end .entry-content -->';
-	echo '</div><!-- end .page .hentry .entry -->';
+		      		/* below adds bootstrap styling to the paginated links.  Cool beans */
+		        	if( is_array( $pages ) ) {
+		         		$paged = ( get_query_var('page') == 0 ) ? 1 : get_query_var('page');
+		         		echo '<div class="pagination-wrap"><ul class="pagination">';
+		         		foreach ( $pages as $page ) {
+		           			echo "<li>$page</li>";
+		            	}
+		            	echo '</ul></div>';
+		            }
+				  ?>
 
-	?>
+				<!--  Outro Text (hard coded)  -->
+			</div><!-- end .entry-content -->
+		</div><!-- end .page .hentry .entry -->
 
-    </div>
 
-    <div class="col-md-3 col-lg-3">
-    	<?php if ( is_active_sidebar( 'sidebar-6' ) ) : ?>
-      		<div id="secondary" class="sidebar-container" role="complementary">
-        		<div class="widget-area">
-          			<?php dynamic_sidebar( 'sidebar-6' ); ?>
-        		</div> <!-- .widget-area -->
-      		</div> <!-- #secondary -->
-      	<?php endif; ?>
-    </div>
+	    	</div>
 
-</div> <!-- row mobileContent browserContent -->
+	    <div class="col-md-3 col-lg-3">
+	    	<?php if ( is_active_sidebar( 'sidebar-6' ) ) : ?>
+	      		<div id="secondary" class="sidebar-container" role="complementary">
+	        		<div class="widget-area">
+	          			<?php dynamic_sidebar( 'sidebar-6' ); ?>
+	        		</div> <!-- .widget-area -->
+	      		</div> <!-- #secondary -->
+	      	<?php endif; ?>
+	    </div>
+
+	</div> <!-- row mobileContent browserContent -->
 </div> <!-- containersecondary -->
 
 <?php get_footer(); ?>

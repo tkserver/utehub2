@@ -14,6 +14,79 @@
 
  */
 
+// this function snipped I found converts time to twitter style, like 1h
+ function calc_time_diff($timestamp, $unit = NULL, $show_unit = TRUE) {
+     $seconds = round((time() - $timestamp)); // How many seconds have elapsed
+     $minutes = round((time() - $timestamp) / 60); // How many minutes have elapsed
+     $hours = round((time() - $timestamp) / 60 / 60); // How many hours have elapsed
+     $days = round((time() - $timestamp) / 60 / 60 / 24); // How many hours have elapsed
+     $seconds_string = $seconds;
+     $minutes_string = $minutes;
+     $hours_string = $hours;
+     $days_string = $days;
+     switch($unit) {
+         case "seconds": return $seconds;
+             break;
+         case "minutes": return $minutes;
+             break;
+         case "hours": return $hours;
+             break;
+         case "days": return $days;
+             break;
+         default: // No time unit specified, return the most relevant
+             if($seconds < 60) { // Less than a minute has passed
+                 if($seconds != 1) {
+                     $seconds_string .= " now";
+                 }
+                 else {
+                     $seconds_string .= " sec";
+                 }
+                 return ($show_unit) ? $seconds_string : $seconds;
+             }
+             elseif($minutes < 60) { // Less than an hour has passed
+                 if($minutes != 1) {
+                     $minutes_string .= " min";
+                 }
+                 else {
+                     $minutes_string .= " min";
+                 }
+                 return ($show_unit) ? $minutes_string : $minutes;
+                 ;
+             }
+             elseif($hours < 24) { // Less than a day has passed
+                 if($hours != 1) {
+                     $hours_string .= " h";
+                 }
+                 else {
+                     $hours_string .= " h";
+                 }
+                 return ($show_unit) ? $hours_string : $hours;
+             }
+             else { // More than a day has passed
+                 if($days != 1) {
+                     $days_string .= " days";
+                 }
+                 else {
+                     $days_string .= " day";
+                 }
+                 return ($show_unit) ? $days_string : $days;
+             }
+             break;
+     }
+ }
+
+
+add_filter('show_admin_bar', '__return_false');
+
+
+ function load_jquery_ui_css(){
+ 	//wp_enqueue_script( 'jquery-ui-datepicker' );
+ 	//wp_enqueue_script( 'jquery-ui-dialog' );
+ 	wp_enqueue_style('jquery-style', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css');
+ }
+ add_action('wp_enqueue_scripts', 'load_jquery_ui_css');
+
+
 // function add_my_js_files(){
 //      wp_enqueue_script('jquery-validate-min',
 //                        get_stylesheet_directory_uri() . '/js/jquery.validate.min.js',
@@ -43,10 +116,10 @@ function add_jquery_effects_core_js() {
 add_action( 'wp_enqueue_scripts', 'add_jquery_effects_core_js' );
 
 
-// function add_jquerydialog_js() {
-//      wp_enqueue_script( 'jquery-ui-dialog' );
-//  }
-//  add_action( 'wp_enqueue_scripts', 'add_jquerydialog_js' );
+function add_jquerydialog_js() {
+     wp_enqueue_script( 'jquery-ui-dialog' );
+ }
+ add_action( 'wp_enqueue_scripts', 'add_jquerydialog_js' );
 
 /* add tinymce to the theme  */
 function tk_tinymce() {
@@ -58,7 +131,7 @@ add_action( 'wp_enqueue_scripts', 'tk_tinymce' );
 function utehubjs() {
     wp_enqueue_style( 'style-utehubjs', get_stylesheet_uri() );
     wp_enqueue_script( 'script-utehubjs', get_template_directory_uri() . '/js/utehub.js', array('jquery'), '1.0.0', true );
-    wp_enqueue_script( 'bootstrapjs', get_template_directory_uri() . '/js/bootstrap.min.js', array('jquery'), '3.0.0', true );
+    wp_enqueue_script( 'bootstrapjs', get_template_directory_uri() . '/js/bootstrap.min.js', array('jquery'), '3.3.7', true );
 }
 add_action( 'wp_enqueue_scripts', 'utehubjs' );
 
@@ -347,31 +420,11 @@ add_action( 'bbp_theme_after_topic_author_details', 'rkk_mentionname_in_bbp' );
 
 
 // Disable buddy press name change //
-
 function disable_name_change( $data ) {
-
-
-
-if ( 1 == $data->field_id )
-
-
-
-$data->field_id = false;
-
-
-
-
-
-
-
-return $data;
-
-
-
+     if ( 1 == $data->field_id )
+          $data->field_id = false;
+     return $data;
 }
-
-
-
 add_action( 'xprofile_data_before_save', 'disable_name_change' );
 
 
@@ -403,8 +456,6 @@ add_action( 'xprofile_data_before_save', 'disable_name_change' );
 
 
  add_filter( 'bbp_get_dynamic_roles', 'ntwb_bbpress_custom_role_names' );
-
-
 
 function ntwb_bbpress_custom_role_names() {
 
@@ -476,41 +527,20 @@ function ntwb_bbpress_custom_role_names() {
 
 
 
-
-
-
-
-
-
-
-
  /* This function changes outgoing mail name wordpress to Ute Hub Email System  */
-
  function custom_wp_mail_from( $email ) {
 
-  $handle = 'admin';
-
- 	$find = 'http://';
-
- 	$replace = '';
-
- 	$link = get_bloginfo( 'url' );
-
- 	$domain = str_replace( $find, $replace, $link );
+      $handle = 'admin';
+      $find = 'http://';
+      $replace = '';
+      $link = get_bloginfo( 'url' );
+      $domain = str_replace( $find, $replace, $link );
 
  	return $handle . '@' . $domain ;
 
  }
 
  add_filter( 'wp_mail_from', 'custom_wp_mail_from' );
-
-
-
-
-
-
-
-
 
 
 
@@ -525,136 +555,72 @@ function textdomain_register_sidebars() {
 
 
 	/* Register the primary sidebar. */
-
 	register_sidebar(
-
 		array(
-
 			'id' => 'sidebar-1',
-
 			'name' => __( 'HomeRight', 'textdomain' ),
-
 			'description' => __( 'A short description of the sidebar.', 'textdomain' ),
-
 		)
-
 	);
 
-
-
 	register_sidebar(
-
 		array(
-
 			'id' => 'sidebar-2',
-
 			'name' => __( 'FooterLeft', 'textdomain' ),
-
 			'description' => __( 'A short description of the sidebar.', 'textdomain' ),
-
 		)
-
 	);
 
-
-
 	register_sidebar(
-
 		array(
-
 			'id' => 'sidebar-3',
-
 			'name' => __( 'FooterMiddle', 'textdomain' ),
-
 			'description' => __( 'A short description of the sidebar.', 'textdomain' ),
-
 		)
-
 	);
 
 	register_sidebar(
-
 		array(
-
 			'id' => 'sidebar-4',
-
 			'name' => __( 'FooterRight', 'textdomain' ),
-
 			'description' => __( 'A short description of the sidebar.', 'textdomain' ),
-
 		)
-
 	);
 
-
-
 	register_sidebar(
-
 		array(
-
 			'id' => 'sidebar-5',
-
 			'name' => __( 'ForumRight', 'textdomain' ),
-
 			'description' => __( 'Forum sidebar.', 'textdomain' ),
-
 		)
-
 	);
 
-
-
 	register_sidebar(
-
 		array(
-
 			'id' => 'sidebar-6',
-
 			'name' => __( 'PageRight', 'textdomain' ),
-
 			'description' => __( 'Standard page sidebar.', 'textdomain' ),
-
 		)
-
 	);
 
-
-
 	register_sidebar(
-
 		array(
-
 			'id' => 'sidebar-7',
-
 			'name' => __( 'MembersRight', 'textdomain' ),
-
 			'description' => __( 'Members page sidebar.', 'textdomain' ),
-
 		)
-
 	);
-
-
 
 	register_sidebar(
-
 		array(
-
 			'id' => 'sidebar-8',
-
 			'name' => __( 'ContentHeader', 'textdomain' ),
-
 			'description' => __( 'Above page content', 'textdomain' ),
-
 		)
-
 	);
-
 }
 
 add_action( 'widgets_init', 'textdomain_register_sidebars' );
-
-
 
 
 
@@ -662,11 +628,10 @@ add_action( 'widgets_init', 'textdomain_register_sidebars' );
 add_filter('widget_text', 'do_shortcode');
 
 
-
 function utehub_load_css() {
 
 
-	// Load our custom version of Bootsrap CSS. Can easily override in a child theme.
+	//Load our custom version of Bootsrap CSS. Can easily override in a child theme.
 	wp_register_style('bootstrap', get_template_directory_uri() . '/css/bootstrap.min.css', array(), '3.0.0', 'all' );
 	wp_enqueue_style( 'bootstrap');
 
@@ -697,13 +662,9 @@ if ( ! function_exists( 'cwd_wp_bootstrapwp_theme_setup' ) ):
   function cwd_wp_bootstrapwp_theme_setup() {
 
     // Adds the main menu
-
-    register_nav_menus( array(
-
-      'main-menu' => __( 'Main Menu', 'cwd_wp_bootstrapwp' ),
-
-    ) );
-
+     register_nav_menus( array(
+         'main-menu' => __( 'Main Menu', 'cwd_wp_bootstrapwp' ),
+     ) );
   }
 
 endif;
@@ -714,10 +675,7 @@ add_action( 'after_setup_theme', 'cwd_wp_bootstrapwp_theme_setup' );
 
 require_once 'inc/nav.php';
 
-
-
 // Register Custom Navigation Walker
-
 require_once('wp_bootstrap_navwalker.php');
 
 register_nav_menus( array(
@@ -731,69 +689,14 @@ register_nav_menus( array(
 add_theme_support( 'post-thumbnails' );
 
 
-
-
-
-//if ( function_exists('register_sidebars') )
-
-
-
-//  register_sidebars(7);
-
-
-
-//  The function below adds a login/logout to the menu
-
-//function add_login_logout_link($items, $args)
-
-//{
-
-//  if(is_user_logged_in())
-
-//  {
-
-//    $newitems = '<li><a title="Logout" href="'. wp_logout_url('index.php') .'">Logout</a></li>';
-
-//    $newitems .= $items;
-
-//  }
-
-//  else
-
-//  {
-
-//    $newitems = '<li><a title="Login" href="'. wp_login_url('index.php') .'">Login</a></li>';
-
-//    $newitems .= $items;
-
-//  }
-
-//  return $newitems;
-
-//}
-
-//add_filter('wp_nav_menu_items', 'add_login_logout_link', 10, 2);
-
-
-
-
-
 /*******************************************************************
-
 * @Author: Boutros AbiChedid
-
 * @Date:   March 20, 2011
-
 * @Websites: http://bacsoftwareconsulting.com/
-
 * http://blueoliveonline.com/
-
 * @Description: Numbered Page Navigation (Pagination) Code.
-
 * @Tested: Up to WordPress version 3.1.2 (also works on WP 3.3.1)
-
 ********************************************************************/
-
 /* Function that Rounds To The Nearest Value.
 
    Needed for the pagenavi() function */
@@ -813,36 +716,20 @@ function round_num($num, $to_nearest) {
 function pagenavi($before = '', $after = '') {
 
     global $wpdb, $wp_query;
-
     $pagenavi_options = array();
-
     $pagenavi_options['pages_text'] = ('Page %CURRENT_PAGE% of %TOTAL_PAGES%:');
-
     $pagenavi_options['current_text'] = '%PAGE_NUMBER%';
-
     $pagenavi_options['page_text'] = '%PAGE_NUMBER%';
-
     $pagenavi_options['first_text'] = ('First Page');
-
     $pagenavi_options['last_text'] = ('Last Page');
-
     $pagenavi_options['next_text'] = 'Next &raquo;';
-
     $pagenavi_options['prev_text'] = '&laquo; Previous';
-
     $pagenavi_options['dotright_text'] = '...';
-
     $pagenavi_options['dotleft_text'] = '...';
-
     $pagenavi_options['num_pages'] = 5; //continuous block of page numbers
-
     $pagenavi_options['always_show'] = 0;
-
     $pagenavi_options['num_larger_page_numbers'] = 0;
-
     $pagenavi_options['larger_page_numbers_multiple'] = 5;
-
-
 
     //If NOT a single Post is being displayed
 

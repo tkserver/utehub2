@@ -10,7 +10,6 @@ if(isset($_GET['user_id'])){$user_id = $_GET['user_id']; }
 if(isset($_GET['nonce'])){$nonce = $_GET['nonce']; }
 if(isset($_GET['task'])){$task = $_GET['task']; }
 if(isset($_GET['reply_id'])){$reply_id = $_GET['reply_id']; }
-
 // echo '<br >topic id ' . $topic_id;
 // echo '<br >replyPost id ' . $replyPost_id;
 // echo '<br >forum id ' . $forum_id;
@@ -30,30 +29,57 @@ $editor_id = generateRandomString();
 	var replyPost_id = <?php echo $replyPost_id; ?>;
 	var forum_id = <?php echo $forum_id; ?>;
 	var editor_id = <?php echo $editor_id; ?>;
+	var reply_id = <?php echo $reply_id; ?>;
 	jQuery( document ).ready( function( $ ) {
 	    tinymce.init( {
-	    	selector: "#<?php echo $editor_id; ?>",
-	        mode : "exact",
-	        height : "200",
-	        width: "100%",
-	        elements : ".post_content",
-	        theme: "modern",
-	        skin: "lightgray",
-	        menubar : false,
-	        statusbar : false,
-	        toolbar: [ "bold italic forecolor blockquote link image preview fullscreen "],
-	        plugins : "link image fullscreen preview textcolor", // plugins folder in wp-includes/tinymce
-	        paste_auto_cleanup_on_paste : true,
-	        paste_postprocess : function( pl, o ) {
-	            o.node.innerHTML = o.node.innerHTML.replace( /&nbsp;+/ig, " " );
-	        }
+	    		selector: "#<?php echo $editor_id; ?>",
+			relative_urls : false,
+	     	mode : "exact",
+	        	height : 240,
+	        	width: "100%",
+	        	elements : ".post_content",
+	        	theme: "modern",
+	        	skin: "lightgray",
+	        	menubar : false,
+	        	statusbar : false,
+	        	toolbar: [ "bold italic forecolor blockquote link image code fullscreen "],
+	        	plugins : "link image fullscreen code textcolor", // plugins folder in wp-includes/tinymce
+	        	paste_auto_cleanup_on_paste : true,
+	        	paste_postprocess : function( pl, o ) {
+	          	o.node.innerHTML = o.node.innerHTML.replace( /&nbsp;+/ig, " " );
+	        	}
 	    } );
 	} );
-
 
 	// below clicks the cancel button from the editor's cancel button...
     jQuery(document).on('click', ".editor-cancel", function() {
     	jQuery('.cancel').click();
+    });
+
+	// block quote the post the user is responding to
+    function updateEditor(taClass) {
+	 var div_quote = "#threadContent_" + reply_id;
+	 var quote = jQuery(div_quote).html();
+      tinyMCE.get(taClass).setContent('<blockquote>' + quote + '</blockquote><br>My response...');
+    }
+
+    jQuery(document).ready(function() {
+         jQuery( "#dialog3" ).dialog({
+           autoOpen: false,
+           show: {
+              effect: "blind",
+              duration: 1000
+           },
+           hide: {
+              effect: "explode",
+              duration: 1000
+           }
+         });
+
+         jQuery( "#opener" ).on( "click", function() {
+           jQuery( "#dialog3" ).dialog( "open" );
+         });
+
     });
 
 </script>
@@ -63,10 +89,10 @@ $editor_id = generateRandomString();
 		<div class="col-xs-6 no-pad">
 			<h1 id="h1_new_message" class="pull-left">Post Reply</h1>
 		</div>
-		<div class="col-xs-6 no-pad">
+		<!-- <div class="col-xs-6 no-pad">
 			<button type="submit" name="bbp_reply_submit" class="btn btn-sm btn-default btn-success pull-right bbp_reply_submit">Submit</button>
 			<button type="button" class="editor-cancel btn btn-default btn-warning btn-sm pull-right">Cancel</button>
-		</div>
+		</div> -->
 	</div>
 
 	<textarea id="<?php echo $editor_id; ?>" name='post_content'></textarea>
@@ -80,4 +106,18 @@ $editor_id = generateRandomString();
 	<input type="hidden" name="_wpnonce" 		 id="tk_forum_message" 	value="<?php if(isset($nonce)){echo $nonce;} ?>"> <!-- the nonce -->
 	<input type="hidden" name="task" 			 id="postTask" 		value="<?php if(isset($task)){echo $task;} ?>">
 
+<br />
+
+<button type="submit" name="bbp_reply_submit" class="btn btn-sm btn-default btn-success pull-right bbp_reply_submit">Submit</button>
+<button type="button" class="editor-cancel btn btn-default btn-warning btn-sm pull-right">Cancel</button>
 </form>
+<button id="t1button" class="btn btn-default btn-sm pull-left" onclick="updateEditor('<?php echo $editor_id; ?>');">Reply With Quote</button>
+
+<div id="dialog3" title="Text Editor Help">
+  <p>To add a link, select the link icon and fill in the fields.</p>
+  <p>To embed a Tweet, paste the tweet URL into the text area on its own line.</p>
+  <p>To embed a YouTube Video, paste the video URL into the text area on its own line.</p>
+  <p>To add an image, click the image icon and paste the image URL into the first field.</p>
+</div>
+
+<button class="btn btn-default btn-sm pull-left" id="opener">HELP</button>

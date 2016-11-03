@@ -1,0 +1,48 @@
+/* hack class to get rid of bootstrap padding */
+@media (min-width: 768px) {
+
+     .no-pad {
+         padding: 0!important;
+     }
+}
+
+
+@media(max-width:767px) {
+
+     .col-md-3 img {
+     	display: block;
+     	margin-left: auto;
+     	margin-right: auto;
+     }
+
+}
+
+@media(max-width:767px) {
+
+     h1.threaded-title {
+          margin-bottom: 5px;
+    }
+
+     #dialog, .editor {
+         padding-left: 10px;
+         padding-right: 10px;
+    }
+
+     #registerContent > div.col-xs-12.clearfix.fahk.no-pad > div.col-xs-12.col-md-6.text-left.no-pad,
+     #registerContent > div.col-xs-12.clearfix.fahk.no-pad > div.col-xs-12.col-md-6.text-right.no-pad {
+
+          text-align: center;
+
+     }
+
+     .col-md-3 img {
+     	display: block;
+     	margin-left: auto;
+     	margin-right: auto;
+     }
+
+     .fahk {
+         text-align: center;
+     }
+
+}

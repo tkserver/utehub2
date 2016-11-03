@@ -22,24 +22,29 @@ jQuery(document).ready(function(){
 	    var task = this.getAttribute('data-task');
 	    var user_id = this.getAttribute('data-user-id');
 	    var reply_id = this.getAttribute('data-reply-id');
-         var base_url = window.location;
-          // production
-          //var editor_url = "http://www.utehub.com/wp-content/themes/utehub25/dialog-reply.php?replyPost_id=" + replyPost_id
+         var curr_url = window.location.host;
+         //alert(curr_url);
 
-          // development
-          var editor_url = base_url + "/wp-content/themes/utehub2/dialog-reply.php?replyPost_id=" + replyPost_id
+         //are we in dev or production?
+          if (curr_url == "localhost:8888"){
+              var base_url = "http://localhost:8888/utehub.com/wp-content/themes/utehub2/dialog-reply.php?replyPost_id=" + replyPost_id;
+          } else {
+               base_url = "http://www.utehub.com/wp-content/themes/utehub2/dialog-reply.php?replyPost_id=" + replyPost_id;
+          }
+
+          //development
+          //var editor_url = "http://localhost:8888/utehub.com/wp-content/themes/utehub2/dialog-reply.php?replyPost_id=" + replyPost_id
+
+          var editor_url = base_url
 	    					+ "&topic_id=" + topic_id
 						+ "&forum_id=" + forum_id
 						+ "&user_id=" + user_id
 						+ "&nonce=" + nonce
 						+ "&task=" + task
 						+ "&reply_id=" + reply_id;
-	 	//alert(editor_url);
 
 
-	    //alert('replyPost_id is ' + replyPost_id);
-
-	   jQuery(this).parent().next("div.editor").load(editor_url).animate({height:300},700);
+	   jQuery(this).parent().next("div.editor").load(editor_url).animate({height:400},700);
 	   jQuery(this).addClass("cancel").removeClass("comment").text("Cancel");
 
     })
@@ -56,16 +61,19 @@ jQuery(document).ready(function(){
 
 
 function tinyNewPost() {
+
 		tinymce.init( {
+
 			mode : "exact",
-			height : 300,
+               relative_urls : false,
+			height : 310,
 			elements : 'post_content',
 			theme: "modern",
 			skin: "lightgray",
 			menubar : false,
 			statusbar : false,
-			toolbar: [ "bold italic forecolor blockquote link image preview fullscreen "],
-			plugins : "link image fullscreen preview textcolor", // plugins folder in wp-includes/tinymce
+			toolbar: [ "bold italic forecolor blockquote link image code fullscreen "],
+			plugins : "link image fullscreen code textcolor", // plugins folder in wp-includes/tinymce
 			paste_auto_cleanup_on_paste : true,
 			paste_postprocess : function( pl, o ) {
 				o.node.innerHTML = o.node.innerHTML.replace( /&nbsp;+/ig, " " );
@@ -76,14 +84,15 @@ function tinyNewPost() {
 function tinyNewPostReply(topic_id) {
 		tinymce.init( {
 			mode : "exact",
-			height : 200,
+               relative_urls : false,
+			height : 400,
 			elements : "post_content_" + topic_id,
 			theme: "modern",
 			skin: "lightgray",
 			menubar : false,
 			statusbar : false,
-			toolbar: [ "bold italic forecolor blockquote link image preview fullscreen "],
-			plugins : "link image fullscreen preview textcolor", // plugins folder in wp-includes/tinymce
+			toolbar: [ "bold italic forecolor blockquote link image code fullscreen "],
+			plugins : "link image fullscreen code textcolor", // plugins folder in wp-includes/tinymce
 			paste_auto_cleanup_on_paste : true,
 			paste_postprocess : function( pl, o ) {
 				o.node.innerHTML = o.node.innerHTML.replace( /&nbsp;+/ig, " " );
@@ -152,7 +161,7 @@ jQuery(document).ready(function() {
 		jQuery('html,body').animate({
 			scrollTop: jQuery(editor_id).offset().top - 30
 		});
-		jQuery(editor_id).animate({height:300}, 1000);
+		jQuery(editor_id).animate({height:400}, 1000);
 		jQuery("#postTask").val("replyPost");
 		jQuery("#topic_id").val(topic_id);
 		jQuery("#forum_id").val(forum_id);
@@ -180,7 +189,7 @@ jQuery(document).on('click', '.replyReply', function(){
 	// autoReplyHeight = el.css('height', 'auto').height();
 	// el.height(curReplyHeight).animate({height: autoReplyHeight}, 1000);
 	//jQuery("#dialog").show().insertAfter(jQuery(replyPost_id).parent());
-	jQuery(editor_id).animate({height:300}, 1000);
+	jQuery(editor_id).animate({height:400}, 1000);
 	jQuery("#postTask").val("replyReply");
 	jQuery("#topic_id").val(topic_id);
 	jQuery("#forum_id").val(forum_id);
@@ -206,7 +215,7 @@ jQuery('.more_button').click(function(){
 		jQuery(this).prevAll(".threadContent, .replyContent").removeClass("contentLess");
 		jQuery(this).prevAll(".threadContent, .replyContent").addClass("contentMore");
 		jQuery(this).addClass("active");
-		jQuery(this).text("Less");
+		jQuery(this).text(" Less");
 	} else {
 		jQuery(this).prevAll(".threadContent, .replyContent").removeClass("contentMore");
 		jQuery(this).prevAll(".threadContent, .replyContent").addClass("contentLess");
@@ -216,44 +225,71 @@ jQuery('.more_button').click(function(){
 	return false;
 });
 
-jQuery('.expand-all').click(function(){
+jQuery(document).on('click', '.expand-all', function(){
 	if(jQuery(".threadContent, .replyContent").hasClass("contentLess")) {
 		jQuery(".threadContent, .replyContent").removeClass("contentLess");
 		jQuery(".threadContent, .replyContent").addClass("contentMore");
 		jQuery(".more_button").addClass("active");
 		jQuery(".more_button").text("Less");
-		jQuery(this).addClass("active");
-		jQuery(this).text("Shrink All");
-	} else {
+		jQuery('.expand-all').text("Shrink All").addClass("shrink-all").removeClass('expand-all');
+          jQuery.cookie("UteHub_content", "show", { expires : 365 });
+     }
+});
+
+
+jQuery(document).on('click', '.shrink-all', function(){
+     if(jQuery(".threadContent, .replyContent").hasClass("contentMore")) {
 		jQuery(".threadContent, .replyContent").removeClass("contentMore");
 		jQuery(".threadContent, .replyContent").addClass("contentLess");
 		jQuery(".more_button").removeClass("active");
 		jQuery(".more_button").text("More");
-		jQuery(this).removeClass("active");
-		jQuery(this).text("Expand All");
+          jQuery('.shrink-all').text("Expand All").addClass("expand-all").removeClass('shrink-all');
+          jQuery.cookie("UteHub_content", "show", { expires : 365 });
 	}
-	return false;
+});
+
+jQuery(document).ready(function() {
+     var cookieValue = jQuery.cookie("UteHub_replies");
+     if (cookieValue == "hide"){
+          jQuery('.expand-replies-hide').click();
+     }
+     if (cookieValue == "show"){
+          jQuery('.expand-replies-show').click();
+     }
+});
+
+jQuery(document).ready(function() {
+     var cookieValue = jQuery.cookie("UteHub_content");
+     if (cookieValue == "hide"){
+          jQuery('.shrink-all').click();
+     }
+     if (cookieValue == "show"){
+          jQuery('.expand-all').click();
+     }
 });
 
 jQuery(document).on('click', '.expand-replies-hide', function(){
 	jQuery(".expand-replies-hide").removeClass("expand-replies-hide").addClass("expand-replies-show");
 	jQuery(".hide-replies-button").click().removeClass("hide-replies-button").addClass("show-replies-button").text("Show Replies");
 	jQuery(this).text("Show Replies");
+     jQuery.cookie("UteHub_replies", "hide", { expires : 365 });
 });
 
 jQuery(document).on('click', '.expand-replies-show', function(){
 	jQuery(".expand-replies-show").removeClass("expand-replies-show").addClass("expand-replies-hide");
 	jQuery(".show-replies-button").click().removeClass("show-replies-button").addClass("hide-replies-button").text("Hide Replies");
 	jQuery(this).text("Hide Replies");
+     jQuery.cookie("UteHub_replies", "show", { expires : 365 });
+
 });
 
 jQuery(document).on('click', '.show-replies-button', function(){
-	jQuery(this).parent().nextAll(".replies").slideToggle();
+	jQuery(this).parent().parent().nextAll(".replies").slideToggle();
 	jQuery(this).text("Hide Replies").removeClass("show-replies-button").addClass("hide-replies-button");
 });
 
 jQuery(document).on('click', '.hide-replies-button', function(){
-	jQuery(this).parent().nextAll(".replies").slideToggle();
+	jQuery(this).parent().parent().nextAll(".replies").slideToggle();
 	jQuery(this).text("Show Replies").removeClass("hide-replies-button").addClass("show-replies-button");
 });
 
