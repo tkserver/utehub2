@@ -1,0 +1,426 @@
+
+  .mce-btn-group .mce-btn {
+      float: left;
+  }
+
+  /*.mceEditor table {
+  max-width:none;  Bug in computation of fullscreen
+  }*/
+
+
+.mce-container, .mce-container-body {
+
+     clear: both;
+ }
+
+  @media(max-width:360px) {
+
+
+
+
+  /* make the toolbar wrap
+  .mceToolbar td {
+      display:table-row;
+      float: left;
+  }
+  .mceToolbar td:nth-of-type(11){
+      clear: left;
+  }
+  */
+  /* awesome below stuff!  */
+  .mce-window                         {width:auto !important; top:0px !important; left:0px !important; right:0px !important; bottom:0px !important; background:none !important;}
+  .mce-window-head                    {background:#FFFFFF !important;}
+  .mce-window-body                    {background:#FFFFFF !important;}
+  .mce-foot > .mce-container-body     {padding:10px !important; width:80% !important;}
+  .mce-panel                          {max-width:100% !important;}
+  .mce-container                      {max-width:100% !important; height:auto !important; overflow:auto;}
+  .mce-container-body                 {max-width:100% !important; height:auto !important; overflow:auto;}
+  .mce-form                           {padding:10px !important;}
+  .mce-tabs                           {max-width:100% !important;}
+  .mce-formitem                       {margin:10px 0 !important;}
+  .mce-abs-layout-item                {position:static !important; width:auto !important;}
+  .mce-abs-layout-item.mce-label      {display:block !important;}
+  .mce-abs-layout-item.mce-textbox    {-webkit-box-sizing:border-box !important; -moz-box-sizing:border-box !important; box-sizing:border-box !important; display:block !important; width:100% !important;}
+  .mce-abs-layout-item.mce-combobox   {display:flex !important;}
+  .mce-abs-layout-item.mce-combobox > .mce-textbox {-ms-flex:1 1 auto; -webkit-flex:1 1 auto; flex:1 1 auto; height:29px !important; width:80% !important;}
+  .mce-container-body.mce-window-body.mce-abs-layout iframe {height:500px !important;} /*this only use with responsive file manager 9*/
+}
+
+
+
+/* media queries for mobile phones */
+@media only screen and (min-device-width : 359px) and (max-device-width : 767px) and (orientation : portrait) {
+
+
+
+     div#membersContent, div#registerContent {
+       padding: 10px !important;
+       margin: 0 !important;
+     }
+
+     .replyContainer {
+         margin-left: 0;
+     }
+
+     .topicContainer {
+
+         /*border-bottom: 2px solid #e3e3e3;*/
+         border-left: 0;
+     }
+
+     div#secondary {
+           margin: 20px;
+     }
+
+
+     .container {
+
+         padding-right: 0px;
+         padding-left: 0px;
+
+     }
+
+     .threadWell {
+         /*padding: 5px;*/
+     }
+
+     .threadContent {
+         padding-left: 5px;
+     }
+
+     .threadButtonGroup {
+         float: left;
+         /* width: 100%; */
+         left: 5px;
+         clear: left;
+     }
+
+     .mobileContent {
+         padding-left: 0;
+         padding-right: 0;
+         padding-top: 7px;
+         border-top: none;
+         background-color: #efefef;
+     }
+
+     h1, .footerWell {
+       margin: 0;
+     }
+
+
+} /*end of mobile portrait @media */
+
+
+
+@media screen and (max-width: 600px) {
+
+
+
+     #bbpress-forums fieldset.bbp-form {
+     	padding: 0;
+     	border: none;
+         margin-bottom: 10px;
+     }
+
+
+
+     body > div.container > div {
+
+     	border: none !important;
+
+     }
+
+     .header-logged-in {
+
+     /*	    position: fixed;
+
+     */	    margin-left: 0 !important;
+
+     	    margin-right: 0 !important;
+
+     	    width: 100%;
+
+     /*	    top: 32px;
+
+     */	    z-index: 1035;
+
+     		}
+
+
+
+     div.containerShadow {
+
+
+
+     	padding-left: 10px;
+
+         padding-right: 10px;
+
+         border: none !important;
+
+     }
+
+
+
+
+
+     .header-logged-in {
+
+     	    margin-left: 0 !important;
+
+     	    margin-right: 0 !important;
+
+     	    width: 100%;
+
+     	    z-index: 1035;
+
+     		}
+
+
+
+
+
+     div#membersContent, div#registerContent {
+
+     	overflow-x: hidden;
+
+     	border: none !important;
+
+     }
+
+     #bbp_stats_widget-2 dl dt {
+
+     	float: left;
+
+     	font-weight: normal;
+
+     	font-size: 14px;
+
+     	width: 140px
+
+     }
+
+
+
+     .bbp-forum-title{
+
+         font-size: 14px;
+
+         font-weight: normal;
+
+         color: darkred;
+
+     }
+
+
+
+
+
+     .forum-footer {
+
+
+
+         /* display: block; */
+
+         width: 100%;
+
+         padding-right: 0;
+
+         padding-left: 0;
+
+     }
+
+
+
+     /*.widgettitle {
+
+     	font-size: 16px;
+
+     	font-family: utehub;
+
+     }*/
+
+     .footerWell {
+
+         min-height: 20px;
+
+         padding: 19px;
+
+     /*    margin-bottom: 20px;
+
+     */
+
+     	background-color: #f5f5f5;
+
+         border: 1px solid #e3e3e3;
+
+         border-radius: 4px;
+
+         -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.05);
+
+         box-shadow: inset 0 1px 1px rgba(0,0,0,0.05);
+
+     }
+
+     ul.swa-activity-list li {
+
+         padding: 2px 0 0 0 !important;
+
+     }
+
+
+
+     div.swa-activity-meta {
+
+         margin: 0 0 5px 3px !important;
+
+     }
+
+
+
+     .swa-activity-list .swa-activity-header a:first-child, span.highlight {
+
+     	background: #FBEDED !important;
+
+     	border-bottom: 1px solid #F9C1C1 !important;
+
+     	border-right: 1px solid #F9C1C1 !important;
+
+     	color: red !important;
+
+     }
+
+     .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus, .navbar-default .navbar-toggle {
+
+     	background-color: #333;
+
+     	top: 5px;
+
+     }
+
+     img {
+
+     	/*max-width: 100%;*/
+
+     }
+
+     nav.navbar.navbar-top.tkNoBackground {
+
+     	font-size: 12px;
+
+     }
+
+     nav.navbar.navbar-default {
+
+     }
+
+     .dropdown-menu>li>a {
+
+     	color: red !important;
+
+     }
+
+     a:hover {
+
+     	color: #9C0000 !important;
+
+     }
+
+     .dropdown-menu {
+
+     	background-color: #ccc;
+
+     }
+
+     .tkNoBackground {
+
+     	background: 0 !important;
+
+     }
+
+     div.container-fluid tkContent {
+
+     	-webkit-box-shadow: 0px -1px 11px 0px rgba(50, 50, 50, 0.75);
+
+     	-moz-box-shadow: 0px -1px 11px 0px rgba(50, 50, 50, 0.75);
+
+     	box-shadow: 0px -1px 11px 0px rgba(50, 50, 50, 0.75);
+
+     }
+
+     div.container.tkWhite {
+
+     	/*	background: white;
+
+     */	padding: 20px;/*   	-moz-box-shadow:inset 0 0 10px 0 #000000;
+
+        	-webkit-box-shadow:inset 0 0 10px 0 #000000;
+
+     	box-shadow:inset 0 0 10px 0 #000000;*/
+
+     }
+
+
+     .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:hover, .navbar-default .navbar-nav>.open>a:focus {
+
+     	color: red;
+
+     	background-color: #ccc;
+
+     }
+
+     .navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:hover, .navbar-default .navbar-nav>.active>a:focus {
+
+     	color: #fff;
+
+     	background-color: red;
+
+     }
+
+     .navbar-default .navbar-nav>li>a {
+
+     	color: red;
+
+     }
+
+     .navbar-default {
+
+     /* background-color: #f8f8f8; */
+
+     /*	border-color: red;
+
+     */}
+
+     .navbar {
+
+     	font-size: 18px;
+
+     	background: transparent;
+
+     	border: 0;
+
+     	/*background: rgb(255,255,255);
+
+
+
+     background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNlNWU1ZTUiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+
+     background: -moz-linear-gradient(top,  rgba(255,255,255,1) 0%, rgba(229,229,229,1) 100%);
+
+     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(100%,rgba(229,229,229,1)));
+
+     background: -webkit-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%);
+
+     background: -o-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%);
+
+     background: -ms-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%);
+
+     background: linear-gradient(to bottom,  rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%);
+
+     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 );*/
+
+     	top: 10px;
+
+     }
+
+}

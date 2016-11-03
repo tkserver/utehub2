@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
 
@@ -16,7 +16,7 @@
 
  */
 
- 
+
 
  // Reporting E_NOTICE can be good too (to report uninitialized
 
@@ -125,12 +125,14 @@
 <meta name="theme-color" content="#ffffff">
 
 <link rel="stylesheet" href="<?php echo get_template_directory_uri(); ?>/ute-hub_font.css">
+<link rel="stylesheet" href="<?php echo get_template_directory_uri(); ?>/css/font-awesome.min.css">
+<link rel="stylesheet" href="<?php echo get_template_directory_uri(); ?>/css/editor.css">
 
 
 
-<?php 
+<?php
 
-  // Fires the 'wp_head' action and gets all the scripts included by wordpress, wordpress plugins or functions.php 
+  // Fires the 'wp_head' action and gets all the scripts included by wordpress, wordpress plugins or functions.php
 
   // using wp_enqueue_script if it has $in_footer set to false (which is the default)
 
@@ -152,7 +154,7 @@
 
   <?php
 
-  
+
 
   if ( is_user_logged_in()) {
 
@@ -162,7 +164,7 @@
 
       exit;
 
-      
+
 
     }
 
@@ -170,7 +172,7 @@
 
   ?>
 
-    
+
 
 </head>
 
@@ -190,7 +192,7 @@
 
       <div class="col-md-9">
 
-        <nav class="navbar navbar-default navbar-right" role="navigation"> 
+        <nav class="navbar navbar-default navbar-right" role="navigation">
 
           <!-- Mobile display -->
 
@@ -200,7 +202,7 @@
 
           </div>
 
-          
+
 
           <!-- Collect the nav links for toggling -->
 

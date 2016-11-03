@@ -724,7 +724,7 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
                              'wpautop' => false, // use wpautop?
                              'media_buttons' => true, // show insert/upload button(s)
                              'textarea_name' => $editor_id, // set the textarea name to something different, square brackets [] can be used here
-					    'name' => 'post_content',
+					    	 'name' => 'post_content',
                              'textarea_rows' => 8, // rows="..."
                              'tabindex' => '',
                              'editor_css' => '', //  extra styles for both visual and HTML editors buttons,
@@ -767,35 +767,6 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 <!------------------ /Modal --------------------->
 
 <?php
-
-function tk_get_forums(){
-
-	// WP_Query arguments
-	$args = array (
-		'post_type'              => array( 'forum' ),
-		'post_status'            => array( 'publish' ),
-		'pagination'             => false,
-		'posts_per_page' => 100	);
-
-	// The Query
-	$get_forums = new WP_Query( $args );
-
-	// The Loop
-	if ( $get_forums->have_posts() ) {
-		while ( $get_forums->have_posts() ) {
-			$get_forums->the_post();
-			$forum_id = get_the_ID();
-			$forum_name = get_the_title();
-			echo '<option value="' . $forum_id . '">' . $forum_name . '</option>';
-		}
-	} else {
-		// no posts found
-	}
-
-	// Restore original Post Data
-	wp_reset_postdata();
-
-	}
 
 	// Gets footer.php
 	get_footer();

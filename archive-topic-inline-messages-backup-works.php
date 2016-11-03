@@ -1,20 +1,10 @@
 <?php
 /**
- * Template Name: Threaded-View-Like-Clean-broken
+ * Template Name: Threaded-View-Inline-Messages-backup
  * Description: Used as a page template to show page contents, followed by a loop through a topics archive
  */
  // Gets header.php
 	get_header();
-
-//--------------- 			Turn ON Error Reporting for Debugging 			---------------//
-	 //error_reporting(E_ALL);
-
-
-	 //include (TEMPLATEPATH . '/bb-load.php');
-	//include (TEMPLATEPATH . '/extra-functions.php');
-	//include (plugin_dir_path . 'bbpress/includes/replies/functions.php');
-//--------------------------------------------------------//
-
 
 //---------------   enable plugins, specifically bbpress		 ---------------//
 
@@ -33,77 +23,131 @@ include_once(ABSPATH.'wp-admin/includes/plugin.php');
 	// Check to see if plugin is already active
 	if(is_plugin_active($my_plugin)) {
 
-		// Deactivate plugin
-		// Note that deactivate_plugins() will also take an
-		// array of plugin paths as a parameter instead of
-		// just a single string.
 		deactivate_plugins($my_plugin);
 	}
 	else {
-
 		// Activate plugin
 		activate_plugin($my_plugin);
-		//if(isset($_POST) && array_key_exists('task',$_POST)){
-
-	//		$task = $_POST['task'];
-	//	}
-	//	echo '<div class="col-xs-12 well well-sm">bbpress has been activated !! <br />Current task is ';
-	//
-	//	if(isset($_POST) && array_key_exists('task',$_POST)){
-	//
-	//		echo $task;
-	//	}
-	//	echo '</div> ';
-
 	}
-
 
 	?>
+
 <script>
+
 	task = "";
-    	function myFunction() {
-    		alert("Feature not implemented yet! GO UTES!");
-}
-    	function lognToReply() {
-    		alert("Please login (or register) to post a message. GO UTES!");
-}
 
-	function newPost() {
-		//document.getElementById("taskVar").innerHTML = "newPost";
-		document.getElementById("postTask").innerHTML = "newPost";
-		document.getElementById("post_title").style.display = "block";
-		document.getElementById("postTask").value = "newPost";
-		document.getElementById("forumSelectList").style.display = "block";
-		delete task;
+	function myFunction() {
+    	alert("Feature not implemented yet! GO UTES!");
 	}
-	function replyPost(topic_id, forum_id) {
-		//document.getElementById("taskVar").innerHTML = "replyPost";
-		document.getElementById("postTask").innerHTML = "replyPost";
-		document.getElementById("post_title").style.display = "none";
-		document.getElementById("postTask").value = "replyPost";
-		document.getElementById("topic_id").value = topic_id;
-		document.getElementById("forum_id").value = forum_id;
-		document.getElementById("forumSelectList").style.display = "none";
-		//alert('replyPost --> Topic id: ' + topic_id + ' Forum id: ' + forum_id);
-
-		delete task;
+    function lognToReply() {
+    	alert("Please login (or register) to post a message. GO UTES!");
 	}
 
-	function replyPostQuote(topic_id, forum_id) {
-		//document.getElementById("taskVar").innerHTML = "replyPost";
-		document.getElementById("postTask").innerHTML = "replyPostQuote";
-		document.getElementById("post_title").style.display = "none";
-		document.getElementById("postTask").value = "replyPostQuote";
-		document.getElementById("topic_id").value = topic_id;
-		document.getElementById("forum_id").value = forum_id;
-		document.getElementById("forum_id").value = topic_content;
-		document.getElementById("forumSelectList").style.display = "none";
-		//alert('replyPost --> Topic id: ' + topic_id + ' Forum id: ' + forum_id);
-
-		delete task;
+	function cancelPost(){
+		jQuery("#dialog").animate({height:0},500);
+		curHeight = undefined;
+		autoHeight = undefined;
+		el = undefined;
+		jQuery('#post_content, #bbp_topic_title, #bbp_forum_id').val("");
+		jQuery(".cancelPost").text('Reply').removeClass("cancelPost btn-warning").addClass("replyPost");
 	}
 
-	// what does this chunk do?  Not sure.
+	jQuery(document).on('click', '.cancelPost', function() {
+			cancelPost();
+	});
+
+	jQuery(document).on('click', '#threaded-new-message-cancel', function() {
+		cancelPost();
+		jQuery(this).attr("id","threaded-new-message").text('New Message').addClass("btn-success newMessage");
+	});
+
+
+	jQuery(document).on('click', '#threaded-new-message', function() {
+		jQuery("#dialog").width("100%");
+		//cool way to animate auto height!
+		var el = jQuery('#dialog'),
+	    curHeight = el.height(),
+	    autoHeight = el.css('height', 'auto').height();
+		el.height(curHeight).animate({height: autoHeight}, 1000);
+		jQuery("#dialog").show().insertAfter(jQuery(this).parent());
+		jQuery("#dialog").insertAfter(jQuery(".entry-content"));
+		jQuery("#h1_new_message").text("Post New Topic");
+		jQuery("#postTask").val("newPost");
+		jQuery("#bbp_topic_title").removeClass('hidden');
+		jQuery("#bbp_forum_id").removeClass('hidden');
+		jQuery(".hide_on_reply").removeClass('hidden');
+		jQuery('.cancelPost').addClass('replyPost').removeClass('cancelPost btn-warning').text('Reply');
+		jQuery('#threaded-new-message').addClass('btn-warning').removeClass('btn-success').text('Cancel');
+		jQuery(this).attr("id","threaded-new-message-cancel");
+		jQuery
+		task = undefined;
+	});
+
+jQuery(document).ready(function() {
+	jQuery(document).on('click', '.replyPost', function(){
+		// editor_id = Math.random();
+		// alert(editor_id);
+		// jQuery("#post_content").attr("id", editor_id);
+
+		jQuery(this).text('Cancel').addClass("btn-warning cancelPost").removeClass("replyPost");
+		//cool way to animate auto height!
+		var el = jQuery('#dialog'),
+		curHeight = el.height(),
+		autoHeight = el.css('height', 'auto').height();
+		el.height(curHeight).animate({height: autoHeight}, 1000);
+		jQuery("#dialog").show().insertAfter(jQuery(replyPost_id).parent());
+		jQuery("#postTask").val("replyPost");
+		jQuery("#topic_id").val(topic_id);
+		jQuery("#forum_id").val(forum_id);
+
+		jQuery("#bbp_topic_title").addClass('hidden');
+		jQuery("#bbp_forum_id").addClass('hidden');
+		jQuery(".hide_on_reply").addClass('hidden');
+		jQuery("#h1_new_message").text("Post Reply");
+		jQuery('.cancelPost').not(this).addClass('replyPost').removeClass('cancelPost btn-warning').text('Reply');
+		task = undefined;
+	})
+
+});
+
+
+	function replyReply(topic_id, forum_id, reply_to) {
+		//cool way to animate auto height!
+		var el = jQuery('#dialog'),
+		curHeight = el.height(),
+		autoHeight = el.css('height', 'auto').height();
+		el.height(curHeight).animate({height: autoHeight}, 1000);
+		jQuery("#postTask").val("replyPost");
+		jQuery("#topic_id").val(topic_id);
+		jQuery("#forum_id").val(forum_id);
+		jQuery("#bbp_topic_title").hide();
+		jQuery("#bbp_forum_id").hide();
+		jQuery(".hide_on_reply").hide();
+		jQuery("#h1_new_message").text("Post Reply");
+		jQuery("#bbp_reply_to").val(reply_to);
+		task = undefined;
+	}
+
+//this makes sure the user has filled in the title, category, and some text into the new topic fields
+	// jQuery(document).ready(function (){
+	//     validate();
+	//     jQuery('#bbp_topic_title, #bbp_forum_id').change(validate);
+	// });
+	//
+	// function validate(){
+	//     if (jQuery('#bbp_topic_title').val().length   >   0   &&
+	//         jQuery('#bbp_forum_id').val().length  >   0) {
+			//tinyMCE.get('tinyeditor').getContent().length > 0) {
+	        //jQuery('#post_content').val().length    >   0) {
+	//         jQuery("#bbp_reply_submit").prop("disabled", false);
+	//     }
+	//     else {
+	//         jQuery("#bbp_reply_submit").prop("disabled", true);
+	//     }
+	// }
+
+
+
 	jQuery.fn.extend({
 			toggleText:function(a,b){
 				if(this.html()==a){this.html(b)}
@@ -147,25 +191,37 @@ include_once(ABSPATH.'wp-admin/includes/plugin.php');
 		});
 
 		jQuery('#expand-replies').click(function(){
-			if(jQuery(".replyContainer").hasClass("show_reply")) {
-				jQuery(".replyContainer").removeClass("show_reply");
-				jQuery(".replyContainer").addClass("hide_reply");
-				jQuery("#expand-replies").addClass("active");
-				jQuery(this).addClass("active");
-				jQuery(this).text("Show Replies");
+			if(jQuery(".replies").hasClass("show_reply")) {
+					jQuery(".replies").removeClass("show_reply");
+					jQuery(".replies").addClass("hide_reply");
+					jQuery(".show-replies-button").text("Show Replies");
+					jQuery(this).text("Show Replies");
 			} else {
-				jQuery(".replyContainer").removeClass("hide_reply");
-				jQuery(".replyContainer").addClass("show_reply");
-				jQuery("#expand-replies").removeClass("active");
-				jQuery(this).removeClass("active");
-				jQuery(this).text("Hide Replies");
+					jQuery(".replies").removeClass("hide_reply");
+					jQuery(".replies").addClass("show_reply");
+					jQuery(".show-replies-button").text("Hide Replies");
+					jQuery(this).text("Hide Replies");
 			}
 			return false;
 		});
 
-
+		jQuery('.show-replies-button').click(function(){
+			if(jQuery(this).parent().next(".replies").hasClass("show_reply")) {
+					jQuery(this).parent().next(".replies").removeClass("show_reply");
+					jQuery(this).parent().next(".replies").addClass("hide_reply");
+					jQuery(this).text("Show Replies");
+			} else {
+					jQuery(this).parent().next(".replies").removeClass("hide_reply");
+					jQuery(this).parent().next(".replies").addClass("show_reply");
+					jQuery(this).text("Hide Replies");
+			}
+			return false;
+		});
 	});
 
+</script>
+
+<script>
 	function openThread () {
 		window.open("postlink","_self")
 	}
@@ -202,10 +258,7 @@ $retrieved_nonce = $_REQUEST['_wpnonce'];
 		$forum_id = $bbp_forum_id;
 	}
 	$post_content = $_POST['post_content'];
-	if(isset($_POST) && array_key_exists('menu_order',$_POST)){
-		$menu_order = $_POST['menu_order'];
-		//echo 'menu_order is ' . $menu_order . '<br />';
-	}
+
 	if(isset($_POST) && array_key_exists('post_parent',$_POST)){
 		$post_parent = $_POST['post_parent'];
 		//echo 'post_parent is ' . $post_parent . '<br />';
@@ -232,15 +285,22 @@ $retrieved_nonce = $_REQUEST['_wpnonce'];
 	// If no position was passed, get it from the db and update the menu_order
 	if ( empty( $reply_position ) ) {
 		$reply_position = bbp_get_reply_position_raw( $reply_id, bbp_get_reply_topic_id( $reply_id ) );
+
+
 	}
-}
+	//echo 'reply_position is ' . $reply_position;
+
+
+
+	}
 
 if(isset($_POST) && array_key_exists('task',$_POST)){
 
 	if ($task == 'newPost') {
-		$task = "";
+			$task = "";
+			/** Topic Flooding ********************************************************/
 
-	/** Topic Flooding ********************************************************/
+
 	/** Insert ********************************************************************/
 	global $wp_query, $wpdb;
 	$curauth = $wp_query->get_queried_object();
@@ -258,7 +318,6 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 		'post_status'    => 'publish',
 		'post_type'      => 'topic',
 		'post_author'    => $post_author,
-		//'post_password'  => '',
 		'post_content'   => $post_content,
 		'post_title'     => $post_title,
 		'comment_status' => 'closed',
@@ -310,8 +369,8 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 	$wpdb->insert(
 		$table_name,
 			array(
-				'user_id' 			      => $post_author,
-				'type' 			          => 'bbp_topic_create',
+				'user_id' 			  => $post_author,
+				'type' 			      => 'bbp_topic_create',
 				'action'              => $bp_bbp_action,
 				'item_id'             => $topic_id,
 				'secondary_item_id'   => $forum_id,
@@ -332,9 +391,13 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 				'%s'
 			)
 		);
+
+	// Return new topic ID
+	//return $topic_id;
 	unset($_POST);
-	}
+
 }
+	}
 	//--------------------- END OF INSERT NEW POST - task newPost ------------------------  //
 
 
@@ -345,6 +408,7 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 	global $wp_query, $wpdb;
 	$curauth = $wp_query->get_queried_object();
 	$post_count = $wpdb->get_var("SELECT COUNT(ID) FROM ".$wpdb->prefix."posts WHERE post_author = '" . $post_author . "' AND post_type = 'reply' AND post_content = '$post_content'");
+
 
 	if($post_count > 0){echo '<script> alert("Repost Error! Please do not hit the back button or refresh your browser after posting!")</script>';}
 	if($post_count < 1){
@@ -440,28 +504,31 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 <div class="container">
   <div class="row mobileContent browserContent">
     <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 well well-sm" id="registerContent">
-      <?php if ( is_active_sidebar( 'sidebar-8' ) ) : ?>
-      <?php dynamic_sidebar( 'sidebar-8' ); ?>
-      <?php endif; ?>
-      <div class="col-xs-12 clearfix fahk">
+      	<?php if ( is_active_sidebar( 'sidebar-8' ) ) : ?>
+      		<?php dynamic_sidebar( 'sidebar-8' ); ?>
+      	<?php endif; ?>
+      	<div class="col-xs-12 clearfix fahk">
         <div class="col-xs-6 text-left"> <?php echo '<h1 class="threaded-title">'. get_the_title() .'</h1>'; ?> </div>
         <div class="col-xs-6 text-right">
-			<button title="Expand or shrink all board replies on this page!" id="expand-replies" class="btn btn-default">Hide Replies</button>
-			<button title="Expand or shrink all board messages on this page! It is like clicking the more button a billeon times!" class="btn btn-default expand-all">Expand All</button>
+			<button title="Expand or shrink all board replies on this page! Individual topics can be overridden." id="expand-replies" class="btn btn-sm btn-default">Hide Replies</button>
+			<button title="Expand or shrink all board messages on this page! It is like clicking the more button a billeon times!" class="btn btn-sm btn-default expand-all">Expand All</button>
           <?php if ( is_user_logged_in()) { ?>
-          <button id="threaded-new-message" data-toggle="modal" href="#my-modal" type="button" title="Post a New Message" class="btn btn-success pull-right" onclick="newPost()" >New Message</button>
+          <button id="threaded-new-message" type="button" title="Post a New Message" class="newMessage btn btn-success btn-sm pull-right">New Message</button>
           <?php } else { ?>
           <button id="threaded-new-message" onclick="lognToReply()" type="button" title="Login to post a message..." class="btn btn-success pull-right">New Message</button>
           <?php	 } ?>
         </div>
       </div>
 
-<?php
- 	// Intro Text (from page content)
-	echo '<div class="page hentry entry">';
-	// echo '<div class="threaded-head"></div>';
-	echo '<div class="entry-content">' . get_the_content() ;
+	<?php echo '<div class="page hentry entry">'; ?>
 
+	<?php '<div class="threaded-head"></div>'; ?>
+
+	<?php '<div class="entry-content">' . get_the_content() ; ?>
+
+	<?php include_once "new-post-working.php"; // brings in the new post form ?>
+
+	<?php
 	//Protect against arbitrary paged values
 	$paged = ( get_query_var( 'page' ) ) ? absint( get_query_var( 'page' ) ) : 1;
 
@@ -479,8 +546,6 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 		'paged' => $paged
 	);
   }
-
-  //// the topic loop
 	$loop = new WP_Query( $args );
 
 	if( $loop->have_posts() ):
@@ -501,52 +566,67 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 	        $thread_url =  get_site_url() . '?th='.$parentID;
 			$forum_title = get_the_title($forum_id);
 			$forum_link = get_permalink($forum_id);
-			$topic_content = get_the_content();
+			$post_status = get_post_status();
+
+			$reply_count = $wpdb->get_var("SELECT COUNT(ID) FROM ".$wpdb->prefix."posts WHERE post_type = 'reply' AND post_parent = '$topic_id' AND post_status = 'publish'");
+			//echo 'reply count ' . $reply_count;
 
 			echo '<div class="well well-sm threadWell">';
-			echo '<div class="topicContainer">';
-			echo '<div class="full-width">';
-			echo '<div class="threadAvatar">' . get_avatar( get_the_author_meta( 'ID' ), 16 ) . '</div>';
-			echo '<div class="threadAuthor">' . '<a href="' . bp_core_get_user_domain($author) . '">' . get_the_author() . '</a></div>';
-			echo '<div class="threadTopic">' . get_the_title() . '</div>';
-			echo '</div>';
-			echo '<div class="threadContent contentLess" title="Click To View More/Less" id="threadContent_' . $postID . '">' . get_the_content() . '</div>';
-			?>
-			<!-- <div class="threadFooter">
-			  <div class="btn-group btn-group-xs threadButtonGroup" role="group" aria-label="..."> -->
-				<button type="button" title="Click to see more/less content" class="more_button btn btn-default btn-xs" id="expandContent_<?php echo $postID; ?>">More</button>
-				<button onclick="window.location='<?php echo $postLink; ?>'" type="button" title="Go to Topic in Forum Area" class="btn btn-default btn-xs">Open</button>
-				<?php if ( is_user_logged_in()) { ?>
-					<button data-toggle="modal" href="#my-modal" type="button" title="" onclick="topic_id = <?php echo $parentID; ?>; forum_id = <?php echo $forum_id; ?>; replyPost(topic_id, forum_id)" class="btn btn-default btn-xs">Reply</button>
-				<?php } else { ?>
-					<button onclick="lognToReply()" type="button" title="" class="btn btn-default btn-xs">Reply</button>
-				<?php } ?>
-				<button type="button" class="btn btn-default btn-xs"> <?php echo tk_like_buttons(); ?> </button>
-				<button type="button" title="Share this topic on Twitter" class="btn btn-default btn-xs">
-				  <a href="http://twitter.com/share?text=<?php echo get_the_title(); ?>&via=Ute_Hub&hashtags=GoUtes&url=<?php echo $thread_url; ?>" target="_blank"><i class="twitter"></i></a></button>
-				<button type="button" title="Share this topic on Facebook" class="btn btn-default btn-xs"><a href="https://facebook.com/sharer.php?u=<?php echo $thread_url; ?>" target="_blank"><i class="facebook"></i></a></button>
-				<button type="button" title="Date" class="btn btn-default btn-xs" disabled="disabled"> <?php echo get_the_date('m/d/y') . ' ' . get_the_time(); ?> </button>
-				<button type="button" title="Forum" class="btn btn-default btn-xs">
-				<a href="<?php echo $forum_link; ?>"><?php echo $forum_title; ?></a>
-				</button>
-			  <!-- </div>
-			</div> -->
+				echo '<div class="topicContainer">';
+					echo '<div class="full-width">';
+						echo '<div class="threadAvatar">' . get_avatar( get_the_author_meta( 'ID' ), 16 ) . '</div>';
+						echo '<div class="threadAuthor">' . '<a href="' . bp_core_get_user_domain($author) . '">' . get_the_author() . '</a></div>';
+						echo '<div class="threadTopic">' . get_the_title() . '</div>';
+					echo '</div>';
+					echo '<div class="threadContent contentLess" id="threadContent_' . $postID . '">' . get_the_content() . '</div>';
+					?>
+						<!-- <div class="threadFooter">
+			  			<div class="btn-group btn-group-xs threadButtonGroup" role="group" aria-label="..."> -->
+						<button type="button" title="Click to see more/less content" class="more_button btn btn-default btn-xs" id="expandContent_<?php echo $postID; ?>">More</button>
+						<?php if($reply_count > 0) { ?>
+							<button type="button" title="Click to show/hide replies for this topic" alt="This topic is closed to replies" class="show-replies-button btn btn-default btn-xs">Hide Replies</button>
+						<?php } ?>
+						<button onclick="window.location='<?php echo $postLink; ?>'" type="button" title="Go to Topic in Forum Area" class="btn btn-default btn-xs">Open</button>
 
-			<?php
+						<?php if ($post_status == 'closed'){ ?>
+								<button type="button" class="btn btn-default btn-xs disabled" title="Topic Closed">Topic Closed</button>
+							<?php } else {
+								if ( is_user_logged_in()) { ?>
+									<button type="button" id="replyPost_<?php echo $parentID; ?>" title="" onclick="replyPost_id = <?php echo 'replyPost_'.$parentID; ?>; topic_id = <?php echo $parentID; ?>; forum_id = <?php echo $forum_id; ?>;" class="replyPost btn btn-default btn-xs">Reply</button>
+							<?php } else { ?>
+								<button onclick="lognToReply()" type="button" title="" class="btn btn-default btn-xs">Reply</button>
+							<?php }
+						} ?>
 
-			echo '</div>';
-			//echo ' &nbsp;&nbsp;[reply][share][email]</div>';
+						<button type="button" class="btn btn-default btn-xs"> <?php echo tk_like_buttons(); ?> </button>
+						<button type="button" title="Share this topic on Twitter" class="btn btn-default btn-xs">
+						  <a href="http://twitter.com/share?text=<?php echo get_the_title(); ?>&via=Ute_Hub&hashtags=GoUtes&url=<?php echo $thread_url; ?>" target="_blank"><i class="twitter"></i></a></button>
+						<button type="button" title="Share this topic on Facebook" class="btn btn-default btn-xs"><a href="https://facebook.com/sharer.php?u=<?php echo $thread_url; ?>" target="_blank"><i class="facebook"></i></a></button>
+						<button type="button" title="Date" class="btn btn-default btn-xs" disabled="disabled"> <?php echo get_the_date('m/d/y') . ' ' . get_the_time(); ?> </button>
+						<button type="button" title="Forum" class="btn btn-default btn-xs">
+						<a href="<?php echo $forum_link; ?>"><?php echo $forum_title; ?></a>
+						</button>
+			  			<!-- </div>
+						</div> -->
+						<?php
+
+				echo '</div>';
+
 
 			$args = array(
-				'post_type' => 'reply', // enter your custom post type
-				'posts_per_page'         => '20',
-				'orderby' => 'menu_order',
-				'order' => 'ASC',
-				'post_parent' => $topic_id,
-
-
+				'post_type' 		=> 'reply', // enter your custom post type
+				'posts_per_page'    => '50',
+				'orderby' 			=> 'menu_order',
+				'order' 			=> 'ASC',
+				'post_parent' 		=> $topic_id,
 			);
+
+			/////////// replies
 			$loopReply = new WP_Query( $args );
+
+
+			echo '<div class="replies show_reply">';
+
 
 			while( $loopReply->have_posts() ): $loopReply->the_post(); global $post;
 				$reply = get_the_content();
@@ -559,30 +639,29 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 				$menu_order = $post->menu_order;
 
 				echo '<div class="replyContainer show_reply">';
-				echo '<div class="threadAvatar">' . get_avatar( get_the_author_meta( 'ID' ), 16 ) . '</div>';
-				echo '<div class="threadAuthor">' . '<a href="' . bp_core_get_user_domain($author) . '">' . get_the_author() . '</a></div>';
-				echo '<div class="replyContent contentLess" id="threadContent_' . $replyID . '">' . get_the_content() . '</div>';
-				?>
-				<!-- <div class="threadFooter">
-				  <div class="btn-group btn-group-xs threadButtonGroup" role="group" aria-label="..."> -->
-					<button type="button" title="Click to see more/less content" class="more_button btn btn-default btn-xs" id="expandContent_<?php echo $postID; ?>">More</button>
-					<button onclick="window.location='<?php echo $postLink . '/#post-' . $replyID; ?>'" type="button" title="Go to Reply in Forum Area" class="btn btn-default btn-xs">Open</button>
-					<?php if ( is_user_logged_in()) { ?>
-					<button data-toggle="modal" href="#my-modal" type="button" title="" onclick="reply_to = <?php echo $replyID; ?>; topic_id = <?php echo $topic_id; ?>; forum_id = <?php echo $forum_id; ?>; replyReply(topic_id, forum_id, reply_to)" class="btn btn-default btn-xs">Reply</button>
-					<?php } else { ?>
-					<button onclick="lognToReply()" type="button" title="" class="btn btn-default btn-xs">Reply</button>
-					<?php } ?>
-					<button type="button" class="btn btn-default btn-xs"> <?php echo tk_like_buttons (); ?> </button>
-					<button type="button" title="Date" class="btn btn-default btn-xs" disabled="disabled"> <?php echo get_the_date('m/d/y') . ' ' . get_the_time(); ?> </button>
-				  <!-- </div>
-			  </div> -->
-      <?php
-	 echo '</div>';
+					echo '<div class="threadAvatar">' . get_avatar( get_the_author_meta( 'ID' ), 16 ) . '</div>';
+					echo '<div class="threadAuthor">' . '<a href="' . bp_core_get_user_domain($author) . '">' . get_the_author() . '</a></div>';
+					echo '<div class="replyContent contentLess" id="threadContent_' . $replyID . '">' . get_the_content() . '</div>';
+						?>
+						<button type="button" title="Click to see more/less content" alt="This topic is closed to replies" class="more_button btn btn-default btn-xs" id="expandContent_<?php echo $postID; ?>">More</button>
+						<button onclick="window.location='<?php echo $postLink . '/#post-' . $replyID; ?>'" type="button" title="Go to Reply in Forum Area - Videos, Twitter, various media may work better in the main forum" class="btn btn-default btn-xs">Open</button>
 
-			//echo '<blockquote><p>' . get_the_content() . '</p></blockquote>';
-
-		endwhile;
-		  echo '</div>';
+						<?php if ($post_status == 'closed'){ ?>
+								<button type="button" class="btn btn-default btn-xs disabled" title="Topic Closed">Topic Closed</button>
+							<?php } else {
+								if ( is_user_logged_in()) { ?>
+									<button type="button" title="" onclick="reply_to = <?php echo $replyID; ?>; topic_id = <?php echo $topic_id; ?>; forum_id = <?php echo $forum_id; ?>; replyReply(topic_id, forum_id, reply_to)" class="btn btn-default btn-xs">Reply</button>
+								<?php } else { ?>
+									<button onclick="lognToReply()" type="button" title="" class="btn btn-default btn-xs">Reply</button>
+								<?php }
+						} ?>
+						<button type="button" class="btn btn-default btn-xs"> <?php echo tk_like_buttons (); ?> </button>
+						<button type="button" title="Date" class="btn btn-default btn-xs" disabled="disabled"> <?php echo get_the_date('m/d/y') . ' ' . get_the_time(); ?> </button>
+	      				<?php
+	 			echo '</div>';
+			endwhile;
+		  		echo '</div>';
+				echo '</div>';
 		endwhile;
 
 	endif;
@@ -638,91 +717,6 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
     </div>
   </div>
 </div>
-
-<!------------------ Modal New Post --------------------->
-
-<!-- Button trigger modal -->
-
-<!-- Modal -->
-<div class="modal fade" id="my-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title">New Message</h4>
-      </div>
-      <div class="modal-body" style="background-color: #e1e1e1;">
-        <form id="new-post" name="new-post" method="post" action="<?php echo $_SERVER["REQUEST_URI"] ?>">
-          <fieldset class="bbp-form">
-            <div class="form-group" id="post_title" style="display:none;">
-              <label for="bbp_topic_title"><?php printf( __( 'Topic Title (Maximum Length: %d):', 'bbpress' ), bbp_get_title_max_length() ); ?></label>
-              <br />
-              <input class="form-control" type="text" id="bbp_topic_title" value="<?php bbp_form_topic_title(); ?>" tabindex="<?php bbp_tab_index(); ?>" size="50" name="post_title" maxlength="<?php bbp_title_max_length(); ?>" />
-            </div>
-            <div id="forumSelectList">
-              <p>
-                <label for="bbp_forum_id">
-                  <?php _e( 'Forum:', 'bbpress' ); ?>
-                </label>
-                <br />
-                <?php
-	              bbp_dropdown( array(
-	                   'show_none' => __( '(No Forum)', 'bbpress' ),
-	                   'selected'  => bbp_get_form_topic_forum()
-	                             ) );
-	                        ?>
-              </p>
-            </div>
-            <!-- forum select list) -->
-
-            <div class="bbp-the-content-wrapper">
-              <?php 	$content = "";
-                         $editor_id = 'post_content';
-                         $settings =   array(
-                            'wpautop' => false, // use wpautop?
-                            'media_buttons' => true, // show insert/upload button(s)
-                            'textarea_name' => $editor_id, // set the textarea name to something different, square brackets [] can be used here
-					    	'name' => 'post_content',
-                            'textarea_rows' => 8, // rows="..."
-                            'tabindex' => '',
-                            'editor_css' => '', //  extra styles for both visual and HTML editors buttons,
-                            'editor_class' => 'form-control', // add extra class(es) to the editor textarea
-                            'teeny' => false, // output the minimal editor config used in Press This
-                            'dfw' => false, // replace the default fullscreen with DFW (supported on the front-end in WordPress 3.4)
-                            'tinymce' => false, // load TinyMCE, can be used to pass settings directly to TinyMCE using an array()
-                            'quicktags' => true // load Quicktags, can be used to pass settings directly to Quicktags using an array()
-                         );
-					?>
-              <?php wp_editor( $content, $editor_id, $settings = array() ); ?>
-            </div>
-            <!--                    <p>
-                      <input name="bbp_topic_subscription" id="bbp_topic_subscription" type="checkbox" value="bbp_subscribe" tabindex="103">
-                      <label for="bbp_topic_subscription"> Notify me of follow-up replies via email </label>
-                    </p>-->
-            <div class="bbp-submit-wrapper">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-              <button type="submit"  id="bbp_reply_submit" name="bbp_reply_submit" class="btn btn-default">Submit</button>
-            </div>
-            <input type="hidden" name="topic_id" id="topic_id" value="<?php echo $topic_id; ?>">
-            <input type="hidden" name="post_parent" id="post_parent" value="<?php echo $parentID; ?>">
-            <input type="hidden" name="bbp_reply_to" id="bbp_reply_to" value="">
-            <input type="hidden" name="post_author" id="post_author" value="<?php $post_author = get_current_user_id(); echo $post_author; ?>">
-            <input type="hidden" name="forum_id" id="forum_id" value="<?php echo $forum_id; ?>">
-            <input type="hidden" name="menu_order" id="menu_order" value="<?php echo $menu_order; ?>">
-            <!--<input type="hidden" name="action" id="bbp_post_action" value="bbp-new-reply">-->
-            <?php wp_nonce_field('tk_forum_message'); ?>
-            <input type="hidden" name="task" id="postTask" value="">
-          </fieldset>
-        </form>
-      </div>
-    </div>
-    <!-- /.modal-content -->
-  </div>
-  <!-- /.modal-dialog -->
-</div>
-<!-- /.modal -->
-
-<!------------------ /Modal --------------------->
 
 <?php
 
