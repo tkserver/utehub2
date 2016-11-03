@@ -514,8 +514,8 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 						<div class="media-left pull-left"> <a href="#"><?php echo $avatar; ?></a></div>
 						<div class="media-body">
 							<div class="media-heading"><a href="<?php echo bp_core_get_user_domain($author); ?>"><?php echo get_the_author(); ?></a>
-								<span class="postInfo"><a href="<?php echo $forum_link; ?>"><?php echo $forum_title; ?></a>
-								 &nbsp;&nbsp;<?php echo $time ?></span>
+								<span class="postInfo">
+								 &nbsp;<?php echo $time ?></span>
 								 <div class="pull-right"><?php echo tk_like_buttons(); ?> </div>
 							</div>
 							<div class="replyContent contentLess" id="threadContent_<?php echo $replyID; ?>"><?php echo $reply; ?></div>
