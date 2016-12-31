@@ -1,17 +1,11 @@
 <?php
 
 /**
-
  * Enqueues scripts and styles for front end.
-
  *
-
  * @since Wp Bootstrap 1.0
-
  *
-
  * @return void
-
  */
 
 // this function snipped I found converts time to twitter style, like 1h
@@ -127,10 +121,16 @@ function tk_tinymce() {
 }
 add_action( 'wp_enqueue_scripts', 'tk_tinymce' );
 
+/* add bootstrap-select to the theme  */
+// function tk_bootstrap_select() {
+//      wp_enqueue_script( 'script-bootstrapselect', get_template_directory_uri() . '/js/bootstrap-select.js', array('jquery'), '1.0.0', true );
+// }
+// add_action( 'wp_enqueue_scripts', 'tk_bootstrap_select' );
+
 
 function utehubjs() {
     wp_enqueue_style( 'style-utehubjs', get_stylesheet_uri() );
-    wp_enqueue_script( 'script-utehubjs', get_template_directory_uri() . '/js/utehub.js', array('jquery'), '1.0.0', true );
+    wp_enqueue_script( 'script-utehubjs', get_template_directory_uri() . '/js/utehub.js', array('jquery'), '20161230', true );
     wp_enqueue_script( 'bootstrapjs', get_template_directory_uri() . '/js/bootstrap.min.js', array('jquery'), '3.3.7', true );
 }
 add_action( 'wp_enqueue_scripts', 'utehubjs' );
@@ -635,7 +635,11 @@ function utehub_load_css() {
 	wp_register_style('bootstrap', get_template_directory_uri() . '/css/bootstrap.min.css', array(), '3.0.0', 'all' );
 	wp_enqueue_style( 'bootstrap');
 
-     wp_register_style('style', get_stylesheet_directory_uri() . '/style.css', array() ,'2.5');
+     // //bootstrap custom select stuff
+     // wp_register_style('bootstrap-select', get_template_directory_uri() . '/css/bootstrap-select.min.css', array(), '1.12.1', 'all' );
+     // wp_enqueue_style( 'bootstrap-select');
+
+     wp_register_style('style', get_stylesheet_directory_uri() . '/style.css', array() ,'20161230');
      wp_enqueue_style( 'style');
 
 }

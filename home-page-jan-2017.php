@@ -1,6 +1,6 @@
 <?php
 /**
- * Template Name: Threaded-View-Bootstrap-Media-Item
+ * Template Name: Home Page Jan 2017
  * Description: Used as a page template to show page contents, followed by a loop through a topics archive
  */
  // Gets header.php
@@ -195,7 +195,6 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 			if ( empty( $reply_position ) ) {
 				$reply_position = bbp_get_reply_position_raw( $reply_id, bbp_get_reply_topic_id( $reply_id ) );
 
-
 			}
 
 
@@ -213,7 +212,7 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 	$curauth = $wp_query->get_queried_object();
 	$post_count = $wpdb->get_var("SELECT COUNT(ID) FROM ".$wpdb->prefix."posts WHERE post_author = '" . $post_author . "' AND post_type = 'topic' AND post_content = '$post_content'");
 
-	if($post_count > 0){echo '<script> alert("Oops! You already posted that message. Did you hit back on your browser or hit reload?")</script>';}
+	if($post_count > 0){echo '<script> alert("Repost Error! Please do not hit the back button or refresh your browser after posting!")</script>';}
 	if($post_count < 1){
 
 	$topic_data = array();
@@ -332,7 +331,7 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 	$post_count = $wpdb->get_var("SELECT COUNT(ID) FROM ".$wpdb->prefix."posts WHERE post_author = '" . $post_author . "' AND post_type = 'reply' AND post_content = '$post_content'");
 
 
-	if($post_count > 0){echo '<script> alert("Oops! You already posted that message. Did you hit back on your browser or hit reload?")</script>';}
+	if($post_count > 0){echo '<script> alert("Repost Error! Please do not hit the back button or refresh your browser after posting!")</script>';}
 	if($post_count < 1){
 			// Forum
 
@@ -548,7 +547,7 @@ $current_user_id =  get_current_user_id();
 							<h1 id="h1_new_message" class="pull-left">Post New Message</h1>
 						</div>
 						<div class="col-xs-6 no-pad">
-							<button onclick="validateNewPost()" id="newPost_submit" name="bbp_reply_submit" class="btn btn-sm btn-default btn-success pull-right">Submit</button>
+							<button type="submit" id="newPost_submit" name="bbp_reply_submit" class="btn btn-sm btn-default btn-success pull-right" disabled="disabled">Submit</button>
 							<button type="button" class="btn btn-default btn-warning btn-sm pull-right" onclick="cancelNewPost()">Cancel</button>
 						</div>
 					</div>
@@ -562,16 +561,15 @@ $current_user_id =  get_current_user_id();
 			            <br />
 			            <?php
 			            	bbp_dropdown( array(
-				                	'show_none' => __( 'Forum (required)', 'bbpress' ),
+				                	'show_none' => __( '(No Forum)', 'bbpress' ),
 				                   	'selected'  => bbp_get_form_topic_forum()
 			                	)
 							);
 			        	?>
 			          </p>
 			        <!-- forum select list) -->
-					<div id="textarea_container">
-						<textarea id="post_content" name="post_content"></textarea>
-					</div>
+					<textarea id="post_content" name="post_content"></textarea>
+
 			        <input type="hidden" name="topic_id" id="topic_id" value="<?php if(isset($topic_id)){echo $topic_id;} ?>">
 			        <input type="hidden" name="post_parent" id="post_parent" value="<?php if(isset($parentID)){echo $parentID;} ?>">
 			        <input type="hidden" name="bbp_reply_to" id="bbp_reply_to" value="">
@@ -688,11 +686,12 @@ $current_user_id =  get_current_user_id();
 					<div class="editor"></div>
 				</div>
 
+
 				<?php
 				$args = array(
 					'post_type' 		=> 'reply', // enter your custom post type
 					'posts_per_page'    => '50',
-					'orderby' 		=> 'menu_order',
+					'orderby' 		=> 'post_parent',
 					'order' 			=> 'ASC',
 					'post_parent' 		=> $topic_id,
 				);
@@ -708,12 +707,15 @@ $current_user_id =  get_current_user_id();
 					$post_parent = get_the_ID();
 					$forum_id = get_post_meta( get_the_ID($replyID), '_bbp_forum_id', true);
 					$topic_id = get_post_meta( get_the_ID($replyID), '_bbp_topic_id', true);
+					$replied_to = get_post_meta( get_the_ID($replyID), '_bbp_reply_to', true);
 					$menu_order = $post->menu_order;
 					$avatar = get_avatar( get_the_author_meta( 'ID' ), 42 );
 					$timestamp = get_post_time('U', true);
 					$time = calc_time_diff($timestamp, NULL, TRUE);
 					$user_can_edit = 'no';
 					if($current_user_id == $author){$user_can_edit = 'yes';}
+					//$reply_position = bbp_reply_position($replyID);
+						$reply_position = bbp_get_reply_position( $replyID, $topic_id );
 
 					?>
 				<div class="replies show_reply">
@@ -723,7 +725,7 @@ $current_user_id =  get_current_user_id();
 							<div class="media-heading"><a href="<?php echo bp_core_get_user_domain($author); ?>"><?php echo get_the_author(); ?></a>
 								<span class="postInfo">
 								 &nbsp;<?php echo $time ?></span>
-								 <div class="pull-right"><?php echo tk_like_buttons(); ?> </div>
+								 <div class="pull-right">Reply Position: <?php echo $reply_position; ?> Replied to: <?php $replied_to; ?> Menu Order: <?php echo $menu_order; ?> ID: <?php echo $replyID; ?> <?php echo tk_like_buttons(); ?> </div>
 							</div>
 							<div class="replyContent contentLess" id="threadContent_<?php echo $replyID; ?>"><?php echo $reply; ?></div>
 							<button type="button" title="Click to see more/less content" alt="This topic is closed to replies" class="more_button footer_button reply_more_button" id="expandContent_<?php echo $postID; ?>">More</button>

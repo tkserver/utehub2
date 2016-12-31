@@ -1,19 +1,82 @@
 task = "";
 
+function validateNewPost(){
+
+     jQuery('#bbp_topic_title').removeClass('error');
+     jQuery('#bbp_forum_id').removeClass('error');
+     jQuery('#textarea_container').removeClass('error');
+
+     var valid = '';
+     var title = jQuery.trim(jQuery('#bbp_topic_title').val());
+     var category = jQuery.trim(jQuery('#bbp_forum_id').val());
+     var post_content = tinymce.get('post_content').getContent({format: 'text'});
+     var message = "Oops! "
+     var message1 = '';
+     var message2 = '';
+     var message3 = '';
+
+     if (title  === '') {
+          message1 = ' Title field required.';
+          jQuery('#bbp_topic_title').addClass('error');
+          valid = false;
+     }
+     if (category  === '') {
+          message2 = ' Forum required.';
+          jQuery('#bbp_forum_id').addClass('error');
+          valid = false;
+     }
+
+     if ( jQuery.trim(post_content).length == 0 ) {
+          message3 = ' Message text required.';
+          jQuery('#textarea_container').addClass('error');
+          valid = false;
+     }
+
+     if (valid === false) {
+          alert(message + message1 + message2 + message3);
+          event.preventDefault();
+     }
+}
 
 jQuery(document).ready(function(){
 
 
-     jQuery(function(){
-                 jQuery('#dialog').on('keyup change', function(){
-                     if (jQuery('#bbp_forum_id').val() == '' ||
-                         jQuery('#bbp_topic_title').val() == '') {
-                             jQuery('#newPost_submit').prop('disabled', true);
-                     } else {
-                             jQuery('#newPost_submit').prop('disabled', false);
-                     }
-                 });
-         });
+     // the category filter section
+
+     jQuery(document).on('click', '.category-filter-open', function() {
+     	jQuery("#categoryModal").animate({height:450}, 700);
+          jQuery(".category-filter-open").text("Cancel").addClass("category-filter-open-cancel").removeClass("category-filter-open");
+     })
+
+     jQuery(document).on('click', '.category-cancel', function() {
+          jQuery("#categoryModal").animate({height:0}, 700);
+          jQuery(".category-filter-open-cancel").removeClass("category-filter-open-cancel").text("Category").addClass("category-filter-open");
+     })
+
+     jQuery(document).on('click', '.category-filter-open-cancel', function() {
+          jQuery("#categoryModal").animate({height:0}, 700);
+          jQuery(".category-filter-open-cancel").removeClass("category-filter-open-cancel").text("Category").addClass("category-filter-open");
+     })
+
+
+
+     jQuery("img[src*='gravatar']").attr("src", "http://www.utehub.com/wp-content/uploads/2016/12/ute-hub-no-avatar.png")
+
+
+
+     // disable submit button on new post unless all fields are set
+     // jQuery(function(){
+     //             jQuery('#dialog').on('keyup change', function(){
+     //                 if (jQuery('#bbp_forum_id').val() == '' ||
+     //                     jQuery('#bbp_topic_title').val() == '' ||
+     //                     jQuery('#tinymce').val() == ''
+     //                ) {
+     //                         jQuery('#newPost_submit').prop('disabled', true);
+     //                 } else {
+     //                         jQuery('#newPost_submit').prop('disabled', false);
+     //                 }
+     //             });
+     //     });
 
 
     jQuery(document).on('click', ".comment", function() {
@@ -108,6 +171,9 @@ function myFunction() {
 
 function lognToReply() {
 	alert("Please login (or register) to post a message. GO UTES!");
+}
+function loginToFilter() {
+	alert("This button filters the forum categories, but you have to be logged in to use it.");
 }
 
 function cancelPost(){

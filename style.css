@@ -14,6 +14,27 @@ Text Domain: wpbootstrap
 @import 'tablet.css';
 
 
+.error {
+     border-color: red !important;
+     border-width: 1px;
+     border-style: solid;
+}
+
+#category-filter-submit
+{
+     margin-left: 5px;
+}
+.no-pad {
+     padding: 0;
+}
+.modal-body {
+    overflow: auto; /* fix hr bug in modal.  Not sure why I have to do this */
+}
+
+#categoryFilter {
+     float: right;
+}
+
 div.notifications {
      position: fixed;
      top: 200px;
@@ -44,6 +65,7 @@ clear: both;
 
 div#new-message {
 }
+
 #wp-link-close {
     display: none;
 }
@@ -54,6 +76,13 @@ div#new-message {
 #wp-link p.howto, div#search-panel {
     display: none !important;
 }
+
+#categoryModal {
+    height: 0;
+    overflow: hidden;
+    width: 100%;
+
+ }
 
 
 .reply-dialog {
@@ -198,9 +227,11 @@ h1#h1_new_message {
     margin-top: 0;
 }
 
-.expand-all, .newMessage, .newMessage-disabled, #threaded-new-message-cancel {
+/* commented out 12/16/16 with introduction of new category filter button
+/*.expand-all, .newMessage, .newMessage-disabled, #threaded-new-message-cancel {
     margin-left: 5px;
-}
+}*/
+
 button#threaded-new-message, button#threaded-new-message-cancel {
     width: 100px;
 }
@@ -825,7 +856,7 @@ ul.bbp-threaded-replies {
 div#membersContent, div#registerContent {
 
 	overflow:auto;
-     background-color: #efefef;
+     background-color: #dbdbdb;
 
 }
 
