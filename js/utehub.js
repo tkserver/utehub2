@@ -1,5 +1,18 @@
 task = "";
 
+
+// try to make replies indent to show what they were repling to.
+
+jQuery(document).ready(function(){
+     if( jQuery('.replyContainer').data("reply-to") == jQuery('.topicContainer').data("topic-id") ) {
+          jQuery('.replies').addClass('first-reply');
+          console.log('first topic!');
+     }
+})
+// end replies
+
+
+
 function validateNewPost(){
 
      jQuery('#bbp_topic_title').removeClass('error');
@@ -59,7 +72,7 @@ jQuery(document).ready(function(){
      })
 
 
-
+     // replace the default gravatar with a dude who has a U on his shirt! GO UTES
      jQuery("img[src*='gravatar']").attr("src", "http://www.utehub.com/wp-content/uploads/2016/12/ute-hub-no-avatar.png")
 
 
@@ -84,6 +97,7 @@ jQuery(document).ready(function(){
 	    var nonce = this.getAttribute('data-nonce');
 	    var task = this.getAttribute('data-task');
 	    var user_id = this.getAttribute('data-user-id');
+         var menu_order = this.getAttribute('data-menu-order');
 	    var reply_id = this.getAttribute('data-reply-id');
          var curr_url = window.location.host;
          //alert(curr_url);
@@ -102,6 +116,7 @@ jQuery(document).ready(function(){
 	    					+ "&topic_id=" + topic_id
 						+ "&forum_id=" + forum_id
 						+ "&user_id=" + user_id
+                              + "&menu_order=" + menu_order
 						+ "&nonce=" + nonce
 						+ "&task=" + task
 						+ "&reply_id=" + reply_id;

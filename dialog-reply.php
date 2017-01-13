@@ -4,6 +4,7 @@ if(isset($_GET['topic_id'])){$topic_id = $_GET['topic_id']; }
 if(isset($_GET['post_parent'])){$post_parent = $_GET['post_parent']; }
 if(isset($_GET['bbp_reply_to'])){$bbp_reply_to = $_GET['bbp_reply_to']; }
 if(isset($_GET['post_author'])){$post_author = $_GET['post_author']; }
+if(isset($_GET['menu_order'])){$menu_order = $_GET['menu_order']; }
 if(isset($_GET['forum_id'])){$forum_id = $_GET['forum_id']; }
 if(isset($_GET['replyPost_id'])){$replyPost_id = $_GET['replyPost_id']; }
 if(isset($_GET['user_id'])){$user_id = $_GET['user_id']; }
@@ -28,6 +29,7 @@ $editor_id = generateRandomString();
 	var topic_id = <?php echo $topic_id; ?>;
 	var replyPost_id = <?php echo $replyPost_id; ?>;
 	var forum_id = <?php echo $forum_id; ?>;
+	var menu_order = <?php echo $menu_order; ?>;
 	var editor_id = <?php echo $editor_id; ?>;
 	var reply_id = <?php echo $reply_id; ?>;
 	jQuery( document ).ready( function( $ ) {
@@ -101,6 +103,7 @@ $editor_id = generateRandomString();
 	<input type="hidden" name="post_parent" 	 id="post_parent" 		value="<?php if(isset($replyPost_id)){echo $replyPost_id;} ?>">
 	<input type="hidden" name="bbp_reply_to" 	 id="bbp_reply_to" 		value="<?php if(isset($reply_id)){echo $reply_id;} ?>">
 	<input type="hidden" name="post_author" 	 id="post_author" 		value="<?php if(isset($user_id)){echo $user_id;} ?>">
+	<input type="hidden" name="menu_order" 	 	 id="menu_order" 		value="<?php if(isset($menu_order)){echo $menu_order;} ?>">
 	<input type="hidden" name="forum_id" 		 id="forum_id" 		value="<?php if(isset($forum_id)){echo $forum_id;} ?>">
 	<input type="hidden" name="bbp_forum_id" 	 id="bbp_forum_id" 		value="<?php if(isset($forum_id)){echo $forum_id;} ?>">
 	<input type="hidden" name="_wpnonce" 		 id="tk_forum_message" 	value="<?php if(isset($nonce)){echo $nonce;} ?>"> <!-- the nonce -->

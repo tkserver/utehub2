@@ -727,7 +727,7 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
   	                         'wpautop' => false, // use wpautop?
   	                         'media_buttons' => true, // show insert/upload button(s)
   	                         'textarea_name' => $editor_id, // set the textarea name to something different, square brackets [] can be used here
-  	                          'name' => 'post_content',
+  	                         'name' => 'post_content',
   	                         'textarea_rows' => 8, // rows="..."
   	                         'tabindex' => '',
   	                         'editor_css' => '', //  extra styles for both visual and HTML editors buttons,

@@ -593,9 +593,7 @@ $current_user_id =  get_current_user_id();
 			  } else {
 
 
-					$args = array(
-
-					// START HERE!  FILTERED BY ID 60 WHICH IS FOOTBALL, 30 IS BASKETBALL
+				$args = array(
 					'post_parent__in' => $user_filter_array,
 					'post_type' => 'topic', // enter your custom post type
 					'orderby' => 'date',

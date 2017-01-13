@@ -1,6 +1,6 @@
 <?php
 /**
- * Template Name: Home Page Jan 2017
+ * Template Name: Home Page Threaded Walker Jan 2017
  * Description: Used as a page template to show page contents, followed by a loop through a topics archive
  */
  // Gets header.php
@@ -10,10 +10,6 @@
 //var_dump($_POST);
 
 include_once(ABSPATH.'wp-admin/includes/plugin.php');
-
-// include reply Walker
-include_once(ABSPATH.'wp-content/themes/utehub2/class-walker-tk-reply.php');
-
 
 // Full path to WordPress from the root
 $wordpress_path = '/full/path/to/wordpress/';
@@ -586,23 +582,25 @@ $current_user_id =  get_current_user_id();
 			//Protect against arbitrary paged values
 			$paged = ( get_query_var( 'page' ) ) ? absint( get_query_var( 'page' ) ) : 1;
 
-			  	if ($th > 0){
-				    		$args = array(
-					    'p' => $th,
-					    'post_type' => 'topic'
-			    		);
-			  	} else {
+			  if ($th > 0){
+			    $args = array(
+				    'p' => $th,
+				    'post_type' => 'topic'
+			    );
+			  } else {
 
 
 					$args = array(
-						'post_parent__in' => $user_filter_array,
-						'post_type' => 'topic', // enter your custom post type
-						'orderby' => 'date',
-						'order' => 'DESC',
-						'posts_per_page' => 10,
-						'paged' => $paged
-					);
-			  	}
+
+					// START HERE!  FILTERED BY ID 60 WHICH IS FOOTBALL, 30 IS BASKETBALL
+					'post_parent__in' => $user_filter_array,
+					'post_type' => 'topic', // enter your custom post type
+					'orderby' => 'date',
+					'order' => 'DESC',
+					'posts_per_page' => 10,
+					'paged' => $paged
+				);
+			  }
 			$loop = new WP_Query( $args );
 
 			if( $loop->have_posts() ):
@@ -687,29 +685,47 @@ $current_user_id =  get_current_user_id();
 					</div>
 					<div class="editor"></div>
 				</div>
-
-
 <?php
 
-// user for reply custom post type
-//wpse13669_show_all_children( 22235 , 1 )
+				$default_reply_search   = !empty( $_REQUEST['rs'] ) ? $_REQUEST['rs']    : false;
+				$default_post_parent    = ( bbp_is_single_topic() ) ? bbp_get_topic_id() : 'any';
+				$default_post_type      = ( bbp_is_single_topic() && bbp_show_lead_topic() ) ? bbp_get_reply_post_type() : array( bbp_get_topic_post_type(), bbp_get_reply_post_type() );
+				$default_thread_replies = (bool) ( bbp_is_single_topic() && bbp_thread_replies() );
 
-// test for hierarchy on pages with page id 22253
-//wpse13669_show_all_children( 22253 , 1 )
+				if ( bbp_has_replies(
+					array(
+						'post_type'           => 'reply',         // Only replies
+						'post_parent'         => $postID,       // Of this topic
+						'posts_per_page'      => 25, // This many
+						'paged'               => bbp_get_paged(),            // On this page
+						'orderby'             => 'date',                     // Sorted by date
+						'order'               => 'ASC',                      // Oldest to newest
+						'hierarchical'        => $default_thread_replies,    // Hierarchical replies
+						'ignore_sticky_posts' => true,                       // Stickies not supported
+						's'                   => $default_reply_search,      // Maybe search
+					)
 
-//show_all_children($parent_id, $post_id, $current_level)
 
-// below is an attempt at doing a recursive function instead of using a walker
-$parents_ids   = get_post_ancestors($post->ID);
-//var_dump($parents_ids);
-$top_parent_id = (count($parents_ids) > 0) ? $parents_ids[count($parents_ids)-1] : $post->ID;
-show_all_children($top_parent_id, $post->ID, 1);
 
-?>
 
-</div> <!-- well threadwell -->
+					) ) : ?>
 
-	<?php endwhile; ?> <!-- ends the while there is a post loop -->
+
+					<?php bbp_get_template_part( 'loop',       'tkreplies' ); ?>
+
+				<?php endif; ?>
+
+
+
+
+
+		</div> <!-- well threadwell -->
+
+			<?php endwhile; ?> <!-- ends the while there is a post loop -->
+
+
+
+
 
 		<?php endif; ?>
 
@@ -717,7 +733,7 @@ show_all_children($top_parent_id, $post->ID, 1);
 				<?php
 
 		      		$big = 999999999; // need an unlikely integer
-				    	$pages = paginate_links( array(
+				    $pages = paginate_links( array(
 						'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
 				        'format' => '?paged=%#%',
 				        'current' => max( 1, get_query_var('page') ),
@@ -726,16 +742,16 @@ show_all_children($top_parent_id, $post->ID, 1);
 				      	)
 					);
 
-			      	/* below adds bootstrap styling to the paginated links.  Cool beans */
-			        	if( is_array( $pages ) ) {
-			         		$paged = ( get_query_var('page') == 0 ) ? 1 : get_query_var('page');
-			         		echo '<div class="pagination-wrap"><ul class="pagination">';
-			         		foreach ( $pages as $page ) {
-			           			echo "<li>$page</li>";
-			            	}
-			            	echo '</ul></div>';
-			          }
-				?>
+		      		/* below adds bootstrap styling to the paginated links.  Cool beans */
+		        	if( is_array( $pages ) ) {
+		         		$paged = ( get_query_var('page') == 0 ) ? 1 : get_query_var('page');
+		         		echo '<div class="pagination-wrap"><ul class="pagination">';
+		         		foreach ( $pages as $page ) {
+		           			echo "<li>$page</li>";
+		            	}
+		            	echo '</ul></div>';
+		            }
+				  ?>
 
 				<!--  Outro Text (hard coded)  -->
 			</div><!-- end .entry-content -->

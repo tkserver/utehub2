@@ -8,6 +8,177 @@
  * @return void
  */
 
+
+
+
+ // Register Custom Post Type
+function custom_post_type_reply() {
+
+	$labels = array(
+		'name'                  => _x( 'Replies', 'Post Type General Name', 'tk_reply' ),
+		'singular_name'         => _x( 'Reply', 'Post Type Singular Name', 'tk_reply' ),
+		'menu_name'             => __( 'Post Types', 'tk_reply' ),
+		'name_admin_bar'        => __( 'Post Type', 'tk_reply' ),
+		'archives'              => __( 'Item Archives', 'tk_reply' ),
+		'attributes'            => __( 'Item Attributes', 'tk_reply' ),
+		'parent_item_colon'     => __( 'Parent Item:', 'tk_reply' ),
+		'all_items'             => __( 'All Items', 'tk_reply' ),
+		'add_new_item'          => __( 'Add New Item', 'tk_reply' ),
+		'add_new'               => __( 'Add New', 'tk_reply' ),
+		'new_item'              => __( 'New Item', 'tk_reply' ),
+		'edit_item'             => __( 'Edit Item', 'tk_reply' ),
+		'update_item'           => __( 'Update Item', 'tk_reply' ),
+		'view_item'             => __( 'View Item', 'tk_reply' ),
+		'view_items'            => __( 'View Items', 'tk_reply' ),
+		'search_items'          => __( 'Search Item', 'tk_reply' ),
+		'not_found'             => __( 'Not found', 'tk_reply' ),
+		'not_found_in_trash'    => __( 'Not found in Trash', 'tk_reply' ),
+		'featured_image'        => __( 'Featured Image', 'tk_reply' ),
+		'set_featured_image'    => __( 'Set featured image', 'tk_reply' ),
+		'remove_featured_image' => __( 'Remove featured image', 'tk_reply' ),
+		'use_featured_image'    => __( 'Use as featured image', 'tk_reply' ),
+		'insert_into_item'      => __( 'Insert into item', 'tk_reply' ),
+		'uploaded_to_this_item' => __( 'Uploaded to this item', 'tk_reply' ),
+		'items_list'            => __( 'Items list', 'tk_reply' ),
+		'items_list_navigation' => __( 'Items list navigation', 'tk_reply' ),
+		'filter_items_list'     => __( 'Filter items list', 'tk_reply' ),
+	);
+	$args = array(
+		'label'                 => __( 'Reply', 'tk_reply' ),
+		'description'           => __( 'Reply post type', 'tk_reply' ),
+		'labels'                => $labels,
+		'supports'              => array( ),
+		'hierarchical'          => true,
+		'public'                => true,
+		'show_ui'               => true,
+		'show_in_menu'          => true,
+		'menu_position'         => 5,
+		'show_in_admin_bar'     => true,
+		'show_in_nav_menus'     => true,
+		'can_export'            => true,
+		'has_archive'           => true,
+		'exclude_from_search'   => false,
+		'publicly_queryable'    => true,
+		'capability_type'       => 'post',
+	);
+	register_post_type( 'reply', $args );
+
+}
+add_action( 'init', 'custom_post_type_reply', 0 );
+
+
+function show_all_children($parent_id, $post_id, $current_level) {
+     $top_parents    = array();
+     $top_parents    = get_post_ancestors($post_id);
+     $top_parents[]  = $post_id;
+
+     $children = get_posts(
+         array(
+           'post_type'       => 'reply',
+           'posts_per_page'  => -1,
+           'hierarchical'    => true,
+           'post_parent'     => $post_id,
+           'order'           => 'ASC'
+     ));
+
+     if (empty($children)) return;
+
+     echo '<ul class="children level-'.$current_level.'-children">';
+
+          foreach ($children as $child) {
+               echo '<li';
+                   if (in_array($child->ID, $top_parents))
+                   {
+                   echo ' class="current_page_item"';
+                   }
+               echo '>';
+
+               // echo '<a href="'.get_permalink($child->ID).'">';
+               // echo apply_filters('the_title', $child->post_content);
+               // echo '</a>';
+
+                    echo '<br />ID: '.$child->ID;
+                    echo  '<br />Level: '.$current_level;
+                    echo  '<br />Parent: '.$child->post_parent;
+                    echo  '<br />Content: '.$child->post_content;
+
+                   // now call the same function for child of this child
+                   if ($child->ID && (in_array($child->ID, $top_parents)))
+                   {
+                        show_all_children($child->ID, $post_id, $current_level+1);
+                        echo 'array fired';
+                   }
+
+               echo '</li>';
+          }
+
+     echo '</ul>';
+
+}
+
+
+
+function foo(){echo 'foooo';}
+
+function wpse13669_show_all_children( $post_id_f, $current_level ) {
+
+     // $children = get_posts( array(
+     //     'post_type'          =>'reply',
+     //     'capability_type'    => 'post',
+     //     'hierarchical'       => true,
+     //     'posts_per_page'     =>-1,
+     //     'post_parent'        => $post_id_f,  //22253
+     //     'order_by'           => $post_id_f,
+     //     'order'              => 'ASC'
+     //      )
+     // );
+
+     //use below query for replies, above for checking via page type
+     global $wpdb;
+     $children = $wpdb->get_results( "SELECT * FROM wp_posts WHERE post_parent = $post_id_f AND post_type = 'reply'" );
+
+     //echo "<br />SELECT * FROM wp_posts WHERE post_parent = $post_id_f AND post_type = 'reply' ";
+    if ( empty($children) ) return;
+
+    echo  '<ul class="children level-'.$current_level.'-children">';
+    //var_dump($children);
+     foreach ($children as $child) {
+
+          $key_1_value = get_post_meta( $child->ID, 'key_1', true );
+          // Check if the custom field has a value.
+          if ( ! empty( $key_1_value ) ) {
+              echo '<br />Meta: '.$key_1_value;
+          }
+
+            echo   '<li>';
+            echo  '<br />Level: '.$current_level;
+            echo  '<br />This id: '.$child->ID;
+            echo  '<br />Parent id: '.$child->post_parent;
+            //echo apply_filters( 'the_title', $child->post_content );
+
+        echo  '<br /><a href="'.get_permalink($child->ID).'">LINK ';
+        echo  '</a><br />';
+        echo  apply_filters('the_title', $child->post_content);
+
+        // now call the same function for child of this child
+        //echo 'next level '. $next_level;
+        //$post_id = $child->ID;
+
+        wpse13669_show_all_children( $post_id_f, $current_level++);
+        //return foo();
+
+        //echo testFunction();
+
+            echo  '</li>';
+
+     }
+     wp_reset_query();
+
+    echo  '</ul>';
+    }
+
+
+
 // this function snipped I found converts time to twitter style, like 1h
  function calc_time_diff($timestamp, $unit = NULL, $show_unit = TRUE) {
      $seconds = round((time() - $timestamp)); // How many seconds have elapsed
