@@ -681,7 +681,7 @@ $current_user_id =  get_current_user_id();
 
 								 <button type="button" title="Share this topic on Twitter or Facebook" class="footer_button"> <a href="https://facebook.com/sharer.php?u=<?php echo $thread_url; ?>" target="_blank"><i class="facebook"></i></a></button>
 						<!-- </div> -->
-						<div class="pull-right post-id footer_button"><?php echo $postID; ?></div>
+						<!-- <div class="pull-right post-id footer_button"><?php echo $postID; ?></div> -->
 					</div>
 					<div class="editor"></div>
 				</div>
@@ -707,7 +707,7 @@ $current_user_id =  get_current_user_id();
 					) ) :
 
 ?>
-				<div class="tk-threaded-replies-container">
+				<div class="tk-threaded-replies-container replies show_reply">
 					<?php tk_list_replies(); ?>
 				</div>
 

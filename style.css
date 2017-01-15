@@ -14,10 +14,10 @@ Text Domain: wpbootstrap
 @import 'tablet.css';
 
 .tk-threaded-replies-container {
-     margin-left: 5px;
+     margin-left: 0;
 }
 .tk-thread-li {
-     margin-left: -20px;
+     margin-left: -15px;
      list-style: none;
 }
 .error {
@@ -232,7 +232,10 @@ h1.threaded-title {
 h1#h1_new_message {
     margin-top: 0;
 }
-
+h2#h2_new_message {
+     margin-top: 0;
+     font-size: 18px;
+}
 /* commented out 12/16/16 with introduction of new category filter button
 /*.expand-all, .newMessage, .newMessage-disabled, #threaded-new-message-cancel {
     margin-left: 5px;

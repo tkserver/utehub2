@@ -87,14 +87,14 @@ $editor_id = generateRandomString();
 </script>
 
 <form id="reply-post" name="new-post" method="post" action="">
-	<div class="submit-header col-xs-12 no-pad">
+	<div class="submit-header col-xs-12">
 		<div class="col-xs-6 no-pad">
-			<h1 id="h1_new_message" class="pull-left">Post Reply</h1>
+			<h2 id="h2_new_message" class="pull-left">Reply</h2>
 		</div>
-		<!-- <div class="col-xs-6 no-pad">
+		<div class="col-xs-6 no-pad">
 			<button type="submit" name="bbp_reply_submit" class="btn btn-sm btn-default btn-success pull-right bbp_reply_submit">Submit</button>
 			<button type="button" class="editor-cancel btn btn-default btn-warning btn-sm pull-right">Cancel</button>
-		</div> -->
+		</div>
 	</div>
 
 	<textarea id="<?php echo $editor_id; ?>" name='post_content'></textarea>
@@ -108,11 +108,6 @@ $editor_id = generateRandomString();
 	<input type="hidden" name="bbp_forum_id" 	 id="bbp_forum_id" 		value="<?php if(isset($forum_id)){echo $forum_id;} ?>">
 	<input type="hidden" name="_wpnonce" 		 id="tk_forum_message" 	value="<?php if(isset($nonce)){echo $nonce;} ?>"> <!-- the nonce -->
 	<input type="hidden" name="task" 			 id="postTask" 		value="<?php if(isset($task)){echo $task;} ?>">
-
-<br />
-
-<button type="submit" name="bbp_reply_submit" class="btn btn-sm btn-default btn-success pull-right bbp_reply_submit">Submit</button>
-<button type="button" class="editor-cancel btn btn-default btn-warning btn-sm pull-right">Cancel</button>
 </form>
 <button id="t1button" class="btn btn-default btn-sm pull-left" onclick="updateEditor('<?php echo $editor_id; ?>');">Reply With Quote</button>
 
