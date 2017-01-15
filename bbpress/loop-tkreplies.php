@@ -9,15 +9,9 @@
 
 ?>
 
-
-<ul id="topic-<?php bbp_topic_id(); ?>-replies" class="forums">
-
-
-	<li class="bbp-body">
-
 		<?php if ( bbp_thread_replies() ) : ?>
 
-			<?php bbp_list_replies(); ?>
+			<?php tk_list_replies(); ?>
 
 		<?php else : ?>
 
@@ -27,8 +21,3 @@
 			<?php endwhile; ?>
 
 		<?php endif; ?>
-
-	</li><!-- .bbp-body -->
-
-
-</ul><!-- #topic-<?php bbp_topic_id(); ?>-replies -->

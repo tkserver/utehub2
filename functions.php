@@ -9,6 +9,207 @@
  */
 
 
+function tk_reply ($rid){
+
+	$current_user_id =  get_current_user_id();
+	$author_id = get_current_user_id();
+	$nonce = wp_create_nonce( 'tk_forum_message' );
+
+	$reply_id = $rid;
+ 	$reply   = get_post( $reply_id );
+
+
+		$reply_content = apply_filters( 'the_content', $reply->post_content );
+		$post_status = $reply->post_status;
+		$reply_author_id = $reply->post_author;
+	 	$author = get_the_author_meta( $reply_author_id );
+		$parentID = get_the_ID();
+	 	$replyLink = $reply->guid;
+	 	$replyID = $reply->ID;
+		$postLink = get_permalink();
+	 	$post_parent = $reply->ID;
+	 	$forum_id = get_post_meta( get_the_ID($replyID), '_bbp_forum_id', true);
+	 	$topic_id = get_post_meta( get_the_ID($replyID), '_bbp_topic_id', true);
+	 	//$menu_order = $post->menu_order;
+	 	$avatar =  get_avatar( $reply_author_id, 42 );
+	 	$timestamp = get_post_time('U', true);
+	 	$time = calc_time_diff($timestamp, NULL, TRUE);
+	 	$user_can_edit = 'no';
+	 	if($current_user_id == $author){$user_can_edit = 'yes';}
+
+	 	?>
+	 <div class="replies show_reply">
+	 	<div class="replyContainer show_reply">
+	 		<div class="media-left pull-left"> <a href="#"><?php echo $avatar; ?></a></div>
+	 		<div class="media-body">
+	 			<div class="media-heading"><a href="<?php echo bp_core_get_user_domain(); ?>"><?php echo the_author_meta( 'display_name', $reply_author_id ); ?></a>
+	 				<span class="postInfo">
+	 				 &nbsp;<?php echo $time ?></span>
+	 				 <div class="pull-right"><?php echo tk_like_buttons(); ?> </div>
+	 			</div>
+	 			<div class="replyContent contentLess" id="threadContent_<?php echo $replyID; ?>"><?php echo $reply_content; ?></div>
+	 			<button type="button" title="Click to see more/less content" alt="This topic is closed to replies" class="more_button footer_button reply_more_button" id="expandContent_<?php echo $topic_id; ?>">More</button>
+
+
+	 				<?php if ($post_status == 'closed'){ ?>
+	 					<button type="button" class="footer_button disabled" title="Topic Closed">Topic Closed</button>
+	 				<?php } else {
+	 					if ( is_user_logged_in()) { ?>
+	 						<button type="button" id="replyPost_<?php echo $parentID; ?>"
+	 							data-nonce="<?php echo $nonce; ?>"
+	 							data-task="replyPost"
+	 							data-reply-id="<?php echo $replyID; ?>"
+	 							data-user-id="<?php echo $author_id; ?>"
+	 							onclick="replyPost_id = <?php echo $parentID; ?>;
+	 							topic_id = <?php echo $parentID; ?>;
+	 							forum_id = <?php echo $forum_id; ?>;
+	 							" class="comment footer_button">Reply
+	 						</button>
+	 					<?php } else { ?>
+	 						<button onclick="lognToReply()" type="button" title="" class="footer_button">Reply</button>
+	 					<?php }
+	 			} ?>
+	 			<button onclick="window.location='<?php echo $postLink . '/#post-' . $replyID; ?>'" type="button" title="Go to Reply in Forum Area" class="footer_button">Open</button>
+	 		</div>
+	 		<div class="editor"></div>
+	 	</div>
+	 </div>
+<?php
+}
+
+
+function tk_list_replies( $args = array() ) {
+
+ 	// Reset the reply depth
+ 	bbpress()->reply_query->reply_depth = 0;
+
+ 	// In reply loop
+ 	bbpress()->reply_query->in_the_loop = true;
+
+ 	$r = bbp_parse_args( $args, array(
+ 		'walker'       => null,
+ 		'max_depth'    => bbp_thread_replies_depth(),
+ 		'style'        => 'ul',
+ 		'callback'     => null,
+ 		'end_callback' => null,
+ 		'page'         => 1,
+ 		'per_page'     => -1
+ 	), 'list_replies' );
+
+ 	// Get replies to loop through in $_replies
+ 	$walker = new TK_Walker_Reply;
+ 	$walker->paged_walk( bbpress()->reply_query->posts, $r['max_depth'], $r['page'], $r['per_page'], $r );
+
+ 	bbpress()->max_num_pages            = $walker->max_pages;
+ 	bbpress()->reply_query->in_the_loop = false;
+ }
+
+
+ class TK_Walker_Reply extends Walker {
+
+ 	var $tree_type = 'reply';
+ 	var $db_fields = array(
+ 		'parent' => 'reply_to',
+ 		'id'     => 'ID'
+ 	);
+
+ 	public function start_lvl( &$output = '', $depth = 0, $args = array() ) {
+ 		bbpress()->reply_query->reply_depth = $depth + 1;
+
+ 		switch ( $args['style'] ) {
+ 			case 'div':
+ 				break;
+ 			case 'ol':
+ 				echo "<ol class='bbp-threaded-replies'>\n";
+ 				break;
+ 			case 'ul':
+ 			default:
+ 				echo "<ul class='tk-threaded-replies'>\n";
+ 				break;
+ 		}
+ 	}
+
+ 	public function end_lvl( &$output = '', $depth = 0, $args = array() ) {
+ 		bbpress()->reply_query->reply_depth = (int) $depth + 1;
+
+ 		switch ( $args['style'] ) {
+ 			case 'div':
+ 				break;
+ 			case 'ol':
+ 				echo "</ol>\n";
+ 				break;
+ 			case 'ul':
+ 			default:
+ 				echo "</ul>\n";
+ 				break;
+ 		}
+ 	}
+
+ 	public function display_element( $element = false, &$children_elements = array(), $max_depth = 0, $depth = 0, $args = array(), &$output = '' ) {
+
+ 		if ( empty( $element ) )
+ 			return;
+
+ 		// Get element's id
+ 		$id_field = $this->db_fields['id'];
+ 		$id       = $element->$id_field;
+
+ 		// Display element
+ 		parent::display_element( $element, $children_elements, $max_depth, $depth, $args, $output );
+
+ 		// If we're at the max depth and the current element still has children, loop over those
+ 		// and display them at this level to prevent them being orphaned to the end of the list.
+ 		if ( ( $max_depth <= (int) $depth + 1 ) && isset( $children_elements[$id] ) ) {
+ 			foreach ( $children_elements[$id] as $child ) {
+ 				$this->display_element( $child, $children_elements, $max_depth, $depth, $args, $output );
+ 			}
+ 			unset( $children_elements[$id] );
+ 		}
+ 	}
+
+ 	public function start_el( &$output, $object, $depth = 0, $args = array(), $current_object_id = 0 ) {
+
+ 		// Set up reply
+ 		$depth++;
+ 		bbpress()->reply_query->reply_depth = $depth;
+ 		bbpress()->reply_query->post        = $object;
+ 		bbpress()->current_reply_id         = $object->ID;
+
+ 		// Check for a callback and use it if specified
+ 		if ( !empty( $args['callback'] ) ) {
+ 			call_user_func( $args['callback'], $object, $args, $depth );
+ 			return;
+ 		}
+
+ 		// Style for div or list element
+ 		if ( !empty( $args['style'] ) && ( 'div' === $args['style'] ) ) {
+ 			echo "<div>\n";
+ 		} else {
+ 			echo "<li class=\"tk-thread-li\">\n";
+ 		}
+
+		tk_reply( $object->ID );
+ 	}
+
+ 	/**
+ 	 * @since bbPress (r4944)
+ 	 */
+ 	public function end_el( &$output = '', $object = false, $depth = 0, $args = array() ) {
+
+ 		// Check for a callback and use it if specified
+ 		if ( !empty( $args['end-callback'] ) ) {
+ 			call_user_func( $args['end-callback'], $object, $args, $depth );
+ 			return;
+ 		}
+
+ 		// Style for div or list element
+ 		if ( !empty( $args['style'] ) && ( 'div' === $args['style'] ) ) {
+ 			echo "</div>\n";
+ 		} else {
+ 			echo "</li>\n";
+ 		}
+ 	}
+ }
 
 
  // Register Custom Post Type
@@ -72,14 +273,14 @@ function show_all_children($parent_id, $post_id, $current_level) {
      $top_parents    = get_post_ancestors($post_id);
      $top_parents[]  = $post_id;
 
-     $children = get_posts(
-         array(
-           'post_type'       => 'reply',
-           'posts_per_page'  => -1,
-           'hierarchical'    => true,
-           'post_parent'     => $post_id,
-           'order'           => 'ASC'
-     ));
+	$children = array(
+		'post_type'  => 'reply',
+		'post_parent' => $post_id,
+	    	'capability_type'    => 'post',
+         	'hierarchical'       => true,
+         	'posts_per_page'     =>-1,
+
+	);
 
      if (empty($children)) return;
 
@@ -133,45 +334,53 @@ function wpse13669_show_all_children( $post_id_f, $current_level ) {
      //      )
      // );
 
-     //use below query for replies, above for checking via page type
-     global $wpdb;
-     $children = $wpdb->get_results( "SELECT * FROM wp_posts WHERE post_parent = $post_id_f AND post_type = 'reply'" );
+     // //use below query for replies, above for checking via page type
+     // global $wpdb;
+	// //$meta_count = $wpdb->get_var( "SELECT COUNT(*) FROM wp_postmeta WHERE meta_value = $post_id_f AND meta_key = '_bbp_reply_to'" );
+	// //echo '<br />Meta count: ' . $meta_count . '<br />';
+	//
+	// //$meta_count = 0;
+	//
+	// 	$children = $wpdb->get_results( "SELECT *
+	// 							FROM wp_posts posts
+	// 							LEFT JOIN wp_postmeta meta ON posts.ID = meta.post_id
+	// 							WHERE COALESCE(meta.meta_value, posts.post_parent) = $post_id_f
+	//
+	// 	    "
+	// 	);
+
+	//var_dump($meta);
 
      //echo "<br />SELECT * FROM wp_posts WHERE post_parent = $post_id_f AND post_type = 'reply' ";
     if ( empty($children) ) return;
 
+
     echo  '<ul class="children level-'.$current_level.'-children">';
     //var_dump($children);
-     foreach ($children as $child) {
+	     foreach ($children as $child) {
 
-          $key_1_value = get_post_meta( $child->ID, 'key_1', true );
-          // Check if the custom field has a value.
-          if ( ! empty( $key_1_value ) ) {
-              echo '<br />Meta: '.$key_1_value;
-          }
+	            echo  '<li>';
+	            echo  '<br />Level: '.$current_level;
+	            echo  '<br />This id: '.$child->ID;
+	            echo  '<br />Parent id: '.$child->post_parent;
+	            //echo apply_filters( 'the_title', $child->post_content );
 
-            echo   '<li>';
-            echo  '<br />Level: '.$current_level;
-            echo  '<br />This id: '.$child->ID;
-            echo  '<br />Parent id: '.$child->post_parent;
-            //echo apply_filters( 'the_title', $child->post_content );
+	        echo  '<br /><a href="'.get_permalink($child->ID).'">LINK ';
+	        echo  '</a><br />';
+	        echo  apply_filters('the_title', $child->post_content);
 
-        echo  '<br /><a href="'.get_permalink($child->ID).'">LINK ';
-        echo  '</a><br />';
-        echo  apply_filters('the_title', $child->post_content);
+	        // now call the same function for child of this child
+	        //echo 'next level '. $next_level;
+	        //$post_id = $child->ID;
 
-        // now call the same function for child of this child
-        //echo 'next level '. $next_level;
-        //$post_id = $child->ID;
+	       wpse13669_show_all_children( $child->ID, $current_level+1);
+	        //return foo();
 
-        wpse13669_show_all_children( $post_id_f, $current_level++);
-        //return foo();
+	        //echo testFunction();
 
-        //echo testFunction();
+	            echo  '</li>';
 
-            echo  '</li>';
-
-     }
+	     }
      wp_reset_query();
 
     echo  '</ul>';
@@ -810,7 +1019,7 @@ function utehub_load_css() {
      // wp_register_style('bootstrap-select', get_template_directory_uri() . '/css/bootstrap-select.min.css', array(), '1.12.1', 'all' );
      // wp_enqueue_style( 'bootstrap-select');
 
-     wp_register_style('style', get_stylesheet_directory_uri() . '/style.css', array() ,'20161230');
+     wp_register_style('style', get_stylesheet_directory_uri() . '/style.css', array() ,'20170115');
      wp_enqueue_style( 'style');
 
 }

@@ -687,14 +687,36 @@ $current_user_id =  get_current_user_id();
 				</div>
 
 				<?php
-				$args = array(
-					'post_type' 		=> 'reply', // enter your custom post type
-					'posts_per_page'    => '50',
-					'orderby' 		=> 'menu_order',
-					'order' 			=> 'ASC',
-					'post_parent' 		=> $topic_id,
+
+				$replyargs = array(
+					'post_type'  => 'reply',
+					'post_parent' => $postID,
+						'meta_query' => array(
+							'relation' => 'OR',
+							array(
+								'key'     => '_bbp_reply_to',
+								'value'   => $postID,
+							),
+							array(
+								'key'     => '_bbp_reply_to',
+								'value'   => $postID,
+								'compare' => 'NOT EXISTS',
+							),
+						),
 				);
-				$loopReply = new WP_Query( $args );
+
+
+
+
+				//
+				// $args = array(
+				// 	'post_type' 		=> 'reply', // enter your custom post type
+				// 	'posts_per_page'    => '50',
+				// 	'orderby' 		=> 'menu_order',
+				// 	'order' 			=> 'ASC',
+				// 	'post_parent' 		=> $topic_id,
+				// );
+				$loopReply = new WP_Query( $replyargs );
 
 				////////  REPLY LOOP /////////////////////////////////////////////////////////
 

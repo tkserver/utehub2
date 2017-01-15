@@ -6,66 +6,75 @@
  * @package bbPress
  * @subpackage Theme
  */
+//echo '<br />Post id '. $post->ID;
 
-?>
+//echo '<br /> bbp_the_reply ' . bbp_reply_id();
+echo 'Object id is  '. $object->ID;
 
-<div id="post-<?php bbp_reply_id(); ?>" class="bbp-reply-header">
+$reply_id = bbp_reply_id();
+ $post_status = get_post_status();
+ $current_user_id =  get_current_user_id();
 
-	<div class="bbp-meta">
+ $args = array(
+ 	'post_type' 		=> 'reply', // enter your custom post type
+ 	'posts_per_page'    => '1',
+ 	'orderby' 		=> 'menu_order',
+ 	'order' 			=> 'ASC',
+ 	'post_parent' 		=> $object->ID,
+ );
+ $loopReply = new WP_Query( $args );
 
-		<span class="bbp-reply-post-date"><?php bbp_reply_post_date(); ?></span>
+ ////////  REPLY LOOP /////////////////////////////////////////////////////////
 
-		<?php if ( bbp_is_single_user_replies() ) : ?>
+$loopReply->the_post(); global $post;
+ 	$reply = apply_filters('the_content', get_the_content());
+ 	$author = get_the_author_meta( 'ID' );
+ 	$replyLink = get_permalink();
+ 	$replyID = get_the_ID();
+ 	$post_parent = get_the_ID();
+ 	$forum_id = get_post_meta( get_the_ID($replyID), '_bbp_forum_id', true);
+ 	$topic_id = get_post_meta( get_the_ID($replyID), '_bbp_topic_id', true);
+ 	//$menu_order = $post->menu_order;
+ 	$avatar = get_avatar( get_the_author_meta( 'ID' ), 42 );
+ 	$timestamp = get_post_time('U', true);
+ 	$time = calc_time_diff($timestamp, NULL, TRUE);
+ 	$user_can_edit = 'no';
+ 	if($current_user_id == $author){$user_can_edit = 'yes';}
 
-			<span class="bbp-header">
-				<?php _e( 'in reply to: ', 'bbpress' ); ?>
-				<a class="bbp-topic-permalink" href="<?php bbp_topic_permalink( bbp_get_reply_topic_id() ); ?>"><?php bbp_topic_title( bbp_get_reply_topic_id() ); ?></a>
-			</span>
+ 	?>
+ <div class="replies show_reply">
+ 	<div class="replyContainer show_reply">
+ 		<div class="media-left pull-left"> <a href="#"><?php echo $avatar; ?></a></div>
+ 		<div class="media-body">
+ 			<div class="media-heading"><a href="<?php echo bp_core_get_user_domain($author); ?>"><?php echo get_the_author(); ?></a>
+ 				<span class="postInfo">
+ 				 &nbsp;<?php echo $time ?></span>
+ 				 <div class="pull-right"><?php echo tk_like_buttons(); ?> </div>
+ 			</div>
+ 			<div class="replyContent contentLess" id="threadContent_<?php echo $replyID; ?>"><?php echo $reply; ?></div>
+ 			<button type="button" title="Click to see more/less content" alt="This topic is closed to replies" class="more_button footer_button reply_more_button" id="expandContent_<?php echo $postID; ?>">More</button>
 
-		<?php endif; ?>
 
-		<a href="<?php bbp_reply_url(); ?>" class="bbp-reply-permalink">#<?php bbp_reply_id(); ?></a>
-
-		<?php do_action( 'bbp_theme_before_reply_admin_links' ); ?>
-
-		<?php bbp_reply_admin_links(); ?>
-
-		<?php do_action( 'bbp_theme_after_reply_admin_links' ); ?>
-
-	</div><!-- .bbp-meta -->
-
-</div><!-- #post-<?php bbp_reply_id(); ?> -->
-
-<div <?php bbp_reply_class(); ?>>
-
-	<div class="bbp-reply-author">
-
-		<?php do_action( 'bbp_theme_before_reply_author_details' ); ?>
-
-		<?php bbp_reply_author_link( array( 'sep' => '<br />', 'show_role' => true ) ); ?>
-
-		<?php if ( bbp_is_user_keymaster() ) : ?>
-
-			<?php do_action( 'bbp_theme_before_reply_author_admin_details' ); ?>
-
-			<div class="bbp-reply-ip"><?php bbp_author_ip( bbp_get_reply_id() ); ?></div>
-
-			<?php do_action( 'bbp_theme_after_reply_author_admin_details' ); ?>
-
-		<?php endif; ?>
-
-		<?php do_action( 'bbp_theme_after_reply_author_details' ); ?>
-
-	</div><!-- .bbp-reply-author -->
-
-	<div class="bbp-reply-content">
-
-		<?php do_action( 'bbp_theme_before_reply_content' ); ?>
-
-		<?php bbp_reply_content(); ?>
-
-		<?php do_action( 'bbp_theme_after_reply_content' ); ?>
-
-	</div><!-- .bbp-reply-content -->
-
-</div><!-- .reply -->
+ 				<?php if ($post_status == 'closed'){ ?>
+ 					<button type="button" class="footer_button disabled" title="Topic Closed">Topic Closed</button>
+ 				<?php } else {
+ 					if ( is_user_logged_in()) { ?>
+ 						<button type="button" id="replyPost_<?php echo $parentID; ?>"
+ 							data-nonce="<?php echo $nonce; ?>"
+ 							data-task="replyPost"
+ 							data-reply-id="<?php echo $replyID; ?>"
+ 							data-user-id="<?php echo $author_id; ?>"
+ 							onclick="replyPost_id = <?php echo $parentID; ?>;
+ 							topic_id = <?php echo $parentID; ?>;
+ 							forum_id = <?php echo $forum_id; ?>;
+ 							" class="comment footer_button">Reply
+ 						</button>
+ 					<?php } else { ?>
+ 						<button onclick="lognToReply()" type="button" title="" class="footer_button">Reply</button>
+ 					<?php }
+ 			} ?>
+ 			<button onclick="window.location='<?php echo $postLink . '/#post-' . $replyID; ?>'" type="button" title="Go to Reply in Forum Area" class="footer_button">Open</button>
+ 		</div>
+ 		<div class="editor"></div>
+ 	</div>
+ </div>

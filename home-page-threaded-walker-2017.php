@@ -693,25 +693,28 @@ $current_user_id =  get_current_user_id();
 				$default_thread_replies = (bool) ( bbp_is_single_topic() && bbp_thread_replies() );
 
 				if ( bbp_has_replies(
-					array(
-						'post_type'           => 'reply',         // Only replies
-						'post_parent'         => $postID,       // Of this topic
-						'posts_per_page'      => 25, // This many
-						'paged'               => bbp_get_paged(),            // On this page
-						'orderby'             => 'date',                     // Sorted by date
-						'order'               => 'ASC',                      // Oldest to newest
-						'hierarchical'        => $default_thread_replies,    // Hierarchical replies
-						'ignore_sticky_posts' => true,                       // Stickies not supported
-						's'                   => $default_reply_search,      // Maybe search
+					$args = array(
+						'post_type'           => 'reply',         			// Only replies
+						'post_parent'         => $postID,       			// Of this topic
+						'posts_per_page'      => 50, 						// This many
+						'paged'               => bbp_get_paged(),            	// On this page
+						'orderby'             => 'date',                     	// Sorted by date
+						'order'               => 'ASC',                      	// Oldest to newest
+						'hierarchical'        => $default_thread_replies,    	// Hierarchical replies
+						'ignore_sticky_posts' => true,                       	// Stickies not supported
+						's'                   => $default_reply_search,      	// Maybe search
 					)
 
 
 
 
-					) ) : ?>
+					) ) :
 
-
+?>
+				<div class="tk-threaded-replies-container">
 					<?php bbp_get_template_part( 'loop',       'tkreplies' ); ?>
+				</div>
+
 
 				<?php endif; ?>
 

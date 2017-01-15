@@ -13,7 +13,13 @@ Text Domain: wpbootstrap
 @import 'phone.css';
 @import 'tablet.css';
 
-
+.tk-threaded-replies-container {
+     margin-left: 5px;
+}
+.tk-thread-li {
+     margin-left: -20px;
+     list-style: none;
+}
 .error {
      border-color: red !important;
      border-width: 1px;

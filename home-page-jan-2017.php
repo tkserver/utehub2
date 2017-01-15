@@ -379,7 +379,7 @@ if(isset($_POST) && array_key_exists('task',$_POST)){
 				'author_ip' => bbp_current_author_ip(),
 				'forum_id'  => $forum_id,
 				'topic_id'  => $topic_id,
-				'reply_to'  => $topic_id,  // added to see if can sort by this for threaded view
+				//'reply_to'  => $topic_id,  // added to see if can sort by this for threaded view
 			), 'insert_reply_meta' );
 		}
 
@@ -692,7 +692,7 @@ $current_user_id =  get_current_user_id();
 <?php
 
 // user for reply custom post type
-//wpse13669_show_all_children( 22235 , 1 )
+//wpse13669_show_all_children( $postID , 1 )
 
 // test for hierarchy on pages with page id 22253
 //wpse13669_show_all_children( 22253 , 1 )
