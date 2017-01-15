@@ -673,9 +673,9 @@ $current_user_id =  get_current_user_id();
 									<button type="button" title="Click to show/hide replies for this topic" alt="This topic is closed to replies" class="hide-replies-button footer_button">Hide Replies</button>
 								<?php } ?>
 								<button onclick="window.location='<?php echo $postLink; ?>'" type="button" title="Go to Topic in Forum Area" class="footer_button">Open</button>
-								<?php if($user_can_edit == "yes") { ?>
+								<!-- <?php if($user_can_edit == "yes") { ?>
 									<button type="button" title="Edit This" alt="Edit" class="edit-post footer_button">Edit</button>
-								<?php } ?>
+								<?php } ?> -->
 								<button type="button" title="Share this topic on Twitter or Facebook" class="footer_button">
 								  <a href="http://twitter.com/share?text=<?php echo get_the_title(); ?>&via=Ute_Hub&hashtags=GoUtes&url=<?php echo $thread_url; ?>" target="_blank"><i class="twitter"></i></a> </button>
 
@@ -687,22 +687,18 @@ $current_user_id =  get_current_user_id();
 				</div>
 <?php
 
-				$default_reply_search   = !empty( $_REQUEST['rs'] ) ? $_REQUEST['rs']    : false;
-				$default_post_parent    = ( bbp_is_single_topic() ) ? bbp_get_topic_id() : 'any';
-				$default_post_type      = ( bbp_is_single_topic() && bbp_show_lead_topic() ) ? bbp_get_reply_post_type() : array( bbp_get_topic_post_type(), bbp_get_reply_post_type() );
-				$default_thread_replies = (bool) ( bbp_is_single_topic() && bbp_thread_replies() );
+
+
 
 				if ( bbp_has_replies(
 					$args = array(
 						'post_type'           => 'reply',         			// Only replies
 						'post_parent'         => $postID,       			// Of this topic
 						'posts_per_page'      => 50, 						// This many
-						'paged'               => bbp_get_paged(),            	// On this page
 						'orderby'             => 'date',                     	// Sorted by date
 						'order'               => 'ASC',                      	// Oldest to newest
-						'hierarchical'        => $default_thread_replies,    	// Hierarchical replies
+						'hierarchical'        => true,    					// Hierarchical replies
 						'ignore_sticky_posts' => true,                       	// Stickies not supported
-						's'                   => $default_reply_search,      	// Maybe search
 					)
 
 
@@ -712,7 +708,7 @@ $current_user_id =  get_current_user_id();
 
 ?>
 				<div class="tk-threaded-replies-container">
-					<?php bbp_get_template_part( 'loop',       'tkreplies' ); ?>
+					<?php tk_list_replies(); ?>
 				</div>
 
 
@@ -723,6 +719,7 @@ $current_user_id =  get_current_user_id();
 
 
 		</div> <!-- well threadwell -->
+		<?php wp_reset_query();  ?>
 
 			<?php endwhile; ?> <!-- ends the while there is a post loop -->
 

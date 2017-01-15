@@ -32,7 +32,7 @@ function tk_reply ($rid){
 	 	$topic_id = get_post_meta( get_the_ID($replyID), '_bbp_topic_id', true);
 	 	//$menu_order = $post->menu_order;
 	 	$avatar =  get_avatar( $reply_author_id, 42 );
-	 	$timestamp = get_post_time('U', true);
+	 	$timestamp = strtotime($reply->post_date);
 	 	$time = calc_time_diff($timestamp, NULL, TRUE);
 	 	$user_can_edit = 'no';
 	 	if($current_user_id == $author){$user_can_edit = 'yes';}
@@ -79,7 +79,7 @@ function tk_reply ($rid){
 
 
 function tk_list_replies( $args = array() ) {
-
+	$paged = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
  	// Reset the reply depth
  	bbpress()->reply_query->reply_depth = 0;
 
@@ -88,7 +88,7 @@ function tk_list_replies( $args = array() ) {
 
  	$r = bbp_parse_args( $args, array(
  		'walker'       => null,
- 		'max_depth'    => bbp_thread_replies_depth(),
+ 		'max_depth'    => 5,
  		'style'        => 'ul',
  		'callback'     => null,
  		'end_callback' => null,
@@ -100,8 +100,8 @@ function tk_list_replies( $args = array() ) {
  	$walker = new TK_Walker_Reply;
  	$walker->paged_walk( bbpress()->reply_query->posts, $r['max_depth'], $r['page'], $r['per_page'], $r );
 
- 	bbpress()->max_num_pages            = $walker->max_pages;
- 	bbpress()->reply_query->in_the_loop = false;
+ // 	bbpress()->max_num_pages            = $walker->max_pages;
+ // 	bbpress()->reply_query->in_the_loop = true;
  }
 
 
